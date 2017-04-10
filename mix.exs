@@ -9,7 +9,7 @@ defmodule Onartsipac.Mixfile do
      start_permanent: Mix.env == :prod,
      deps: deps(),
 
-     description: "",
+     description: "Saithe9v mib4ahVe AeF9aihi eor5zuSh",
      package: package()
     ]
   end
