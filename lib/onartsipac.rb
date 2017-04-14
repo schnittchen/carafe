@@ -3,7 +3,7 @@ require "onartsipac/version"
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 
 module Onartsipac
-  def self.on_build_roles
+  def self.on_build_host
     hosts = roles(:build)
 
     if hosts.none?
