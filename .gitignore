@@ -28,3 +28,5 @@ erl_crash.dump
 /pkg/
 /spec/reports/
 /tmp/
+
+/dummies/*/log/
