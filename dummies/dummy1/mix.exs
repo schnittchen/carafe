@@ -1,24 +1,13 @@
-defmodule Onartsipac.Mixfile do
+defmodule Dummy1.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :onartsipac,
+    [app: :dummy1,
      version: "0.1.0",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps(),
-
-     description: "Saithe9v mib4ahVe AeF9aihi eor5zuSh",
-     package: package()
-    ]
-  end
-
-  defp package do
-    [maintainers: ["Thomas Stratmann"],
-     licenses: ["MIT"],
-     links: %{},
-     files: ~w(mix.exs README.md lib)]
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -29,10 +18,16 @@ defmodule Onartsipac.Mixfile do
     [extra_applications: [:logger]]
   end
 
+  # Dependencies can be Hex packages:
+  #
+  #   {:my_dep, "~> 0.3.0"}
+  #
+  # Or git/path repositories:
+  #
+  #   {:my_dep, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+  #
+  # Type "mix help deps" for more examples and options
   defp deps do
-    [
-      {:ex_doc, ">= 0.0.0", only: :dev},
-      {:porcelain, "~> 2.0", only: [:dev, :test]}
-    ]
+    []
   end
 end
