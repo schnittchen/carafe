@@ -15,7 +15,8 @@ defmodule DummyAppCase do
     flunk "Error: #{reason}"
   end
 
-  def assert_psuccess(%{err: nil, status: status}) do
+  def assert_psuccess(%{err: nil, status: status} = result) do
+    IO.puts result.out
     flunk "Error: Exit status #{status}"
   end
 
