@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :onartsipac, key: :value
+#     config :dummy1, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:onartsipac, :key)
+#     Application.get_env(:dummy1, :key)
 #
 # Or configure a 3rd-party app:
 #
@@ -28,5 +28,3 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
-
-config :porcelain, goon_warn_if_missing: false
