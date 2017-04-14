@@ -33,7 +33,7 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", [], dummy_app_poptions())
     |> assert_psuccess
 
-    Porcelain.exec("bundle", ~w{exec cap production foo}, dummy_app_poptions())
+    Porcelain.exec("bundle", ~w{exec cap --trace production foo}, dummy_app_poptions())
     |> assert_psuccess
   end
 end
