@@ -24,6 +24,10 @@ defmodule DummyAppCase do
   end
 
   def dummy_app_poptions do
-    [dir: "dummies/dummy1"]
+    [dir: dummy_app_path()]
+  end
+
+  def dummy_app_path do
+    "dummies/dummy1"
   end
 end
