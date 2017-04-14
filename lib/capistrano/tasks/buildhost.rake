@@ -25,3 +25,13 @@ task "buildhost:clean" do
   end
 end
 
+desc "Deletes everything in the build path on the build host, except deps/"
+task "buildhost:clean:keepdeps" do
+  Onartsipac.on_build_host do |host|
+    execute :mkdir, "-p", Onartsipac::Buildhost.build_path
+    within Onartsipac::Buildhost.build_path do
+      execute :find,  %w{\( -path './deps/*' -or -path ./deps \) -or -delete}
+    end
+  end
+end
+

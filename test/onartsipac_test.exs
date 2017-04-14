@@ -53,4 +53,24 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy_app_poptions())
     |> assert_psuccess
   end
+
+  test "cleaning the build path partially" do
+    Porcelain.exec("sudo", ~w{su - user -c} ++ ["mkdir -p build_path/foo"])
+    |> assert_psuccess
+
+    Porcelain.exec("sudo", ~w{su - user -c} ++ ["mkdir -p build_path/deps/foo"])
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy_app_poptions())
+    |> assert_psuccess
+
+    Porcelain.exec("sudo", ~w{su - user -c} ++ ["[ -e build_path/deps/foo ]"])
+    |> assert_psuccess
+
+    Porcelain.exec("sudo", ~w{su - user -c} ++ ["[ ! -e build_path/foo ]"])
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy_app_poptions())
+    |> assert_psuccess
+  end
 end
