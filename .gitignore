@@ -30,3 +30,4 @@ erl_crash.dump
 /tmp/
 
 /dummies/*/log/
+/dummies/*/Gemfile.lock
