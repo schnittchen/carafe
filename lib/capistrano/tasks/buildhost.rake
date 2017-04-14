@@ -1,0 +1,2 @@
+task "foo" do
+end
