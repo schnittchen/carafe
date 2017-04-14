@@ -18,7 +18,10 @@ task "buildhost:repo:update" => "buildhost:git:check_reachable" do
   end
 end
 
-
-task "foo" => "buildhost:repo:update" do
+desc "Deletes the build path on the build host"
+task "buildhost:clean" do
+  Onartsipac.on_build_host do |host|
+    execute :rm, "-rf", Onartsipac::Buildhost.build_path
+  end
 end
 

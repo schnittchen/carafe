@@ -39,4 +39,18 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:repo:update}, dummy_app_poptions())
     |> assert_psuccess
   end
+
+  test "cleaning the build path" do
+    Porcelain.exec("sudo", ~w{su - user -c} ++ ["touch build_path"])
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy_app_poptions())
+    |> assert_psuccess
+
+    Porcelain.exec("sudo", ~w{su - user -c} ++ ["[ ! -e build_path ]"])
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy_app_poptions())
+    |> assert_psuccess
+  end
 end

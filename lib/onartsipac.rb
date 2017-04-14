@@ -23,5 +23,9 @@ module Onartsipac
     def self.git
       Capistrano::SCM::Git.new
     end
+
+    def self.build_path
+      fetch(:build_path) { raise "no build_path configured" }
+    end
   end
 end
