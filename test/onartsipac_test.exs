@@ -26,14 +26,17 @@ defmodule OnartsipacTest do
     Porcelain.exec("git", ~w{-C /tmp/repo commit -m bogus})
     |> assert_psuccess
 
-    :ok
-  end
-
-  test "foo" do
     Porcelain.exec("bundle", [], dummy_app_poptions())
     |> assert_psuccess
 
-    Porcelain.exec("bundle", ~w{exec cap --trace production foo}, dummy_app_poptions())
+    :ok
+  end
+
+  test "updating the repo cache" do
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:repo:update}, dummy_app_poptions())
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:repo:update}, dummy_app_poptions())
     |> assert_psuccess
   end
 end

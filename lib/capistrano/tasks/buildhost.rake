@@ -4,6 +4,21 @@ task "buildhost:git:check_reachable" do
   end
 end
 
-task "foo" => "buildhost:git:check_reachable" do
+desc "Creates or updates the repo cache on the build host"
+task "buildhost:repo:update" => "buildhost:git:check_reachable" do
+  Onartsipac.on_build_host do |host|
+    unless Onartsipac::Buildhost.git.repo_mirror_exists?
+      Onartsipac::Buildhost.git.clone_repo
+    else
+      # .clone_repo respects the repo_path, .update_mirror not.
+      within repo_path do
+        Onartsipac::Buildhost.git.update_mirror
+      end
+    end
+  end
+end
+
+
+task "foo" => "buildhost:repo:update" do
 end
 

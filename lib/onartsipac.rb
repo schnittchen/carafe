@@ -3,7 +3,7 @@ require "onartsipac/version"
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 
 module Onartsipac
-  def self.on_build_host
+  def self.on_build_host(&block)
     hosts = roles(:build)
 
     if hosts.none?
@@ -15,7 +15,7 @@ module Onartsipac
     end
 
     on hosts do |host|
-      yield host
+      instance_eval(&block)
     end
   end
 
