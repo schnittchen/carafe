@@ -38,5 +38,10 @@ module Onartsipac
     def self.build_path
       fetch(:build_path) { raise "no build_path configured" }
     end
+
+    def self.mix_env_with_arg
+      mix_env = fetch(:mix_env) { raise "set :mix_env in stage config!" }
+      { mix_env: mix_env }
+    end
   end
 end

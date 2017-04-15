@@ -73,4 +73,16 @@ defmodule OnartsipacTest do
 
     assert File.exists?("/home/user/build_path/mix.exs")
   end
+
+  test "executing mix deps.get", %{dummy: dummy} do
+    # buildhost:mix:deps.get does not depend on :prepare_build_path to make debugging easier
+    %{err: nil, status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:deps.get}, dummy.poptions)
+    |> assert_psuccess
+
+    assert File.exists?("/home/user/build_path/deps/plug")
+  end
+
 end

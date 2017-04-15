@@ -55,3 +55,16 @@ task "buildhost:prepare_build_path" => ["buildhost:clean:keepdeps", "buildhost:c
   end
 end
 
+desc "Execute `mix deps.get` on the build host"
+task "buildhost:mix:deps.get" do
+  Onartsipac.on_build_host do |host|
+    within Onartsipac::Buildhost.build_path do
+      with Onartsipac::Buildhost.mix_env_with_arg do
+        execute :mix, "local.hex", "--force"
+        execute :mix, "local.rebar", "--force"
+        execute :mix, "deps.get"
+      end
+    end
+  end
+end
+
