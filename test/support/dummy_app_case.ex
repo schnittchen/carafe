@@ -1,9 +1,48 @@
 defmodule DummyAppCase do
   use ExUnit.CaseTemplate
 
+  defmodule Dummy do
+    defstruct [
+      :name,
+      :source,
+      :base,
+      :local,
+      :poptions,
+      :remote,
+      :build_path
+    ]
+
+    def new(name) do
+      source = ["dummies", name] |> Path.join
+
+      base = ["/tmp/bases", name] |> Path.join |> Path.expand
+      local = [base, source] |> Path.join
+      remote = local
+
+      build_path = "/home/user/build_path"
+
+      %__MODULE__{
+        name: name,
+        source: source,
+        base: base,
+        local: local,
+        poptions: [dir: remote],
+        remote: remote,
+        build_path: build_path
+      }
+    end
+  end
+
   using do
     quote do
       import DummyAppCase
+
+      setup do
+        "" <> name = @dummy_name
+        dummy = Dummy.new(name)
+
+        {:ok, %{dummy: dummy}}
+      end
     end
   end
 
@@ -22,13 +61,5 @@ defmodule DummyAppCase do
 
   def assert_psuccess(result) do
     flunk "Error: #{result.err}"
-  end
-
-  def dummy_app_poptions do
-    [dir: dummy_app_path()]
-  end
-
-  def dummy_app_path do
-    "dummies/dummy1"
   end
 end
