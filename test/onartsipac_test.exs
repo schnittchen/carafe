@@ -7,6 +7,11 @@ defmodule OnartsipacTest do
     File.mkdir! dummy.remote
     File.cp_r! dummy.source, dummy.remote
 
+    File.rm_rf! dummy.local_base
+    File.mkdir_p! dummy.local_base
+    File.cp_r! ".", dummy.local_base
+    File.rm_rf! Path.join(dummy.local_base, ".git")
+
     Porcelain.exec("git", ~w{-C #{dummy.remote} init})
     |> assert_psuccess
 
