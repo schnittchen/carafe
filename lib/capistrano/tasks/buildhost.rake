@@ -35,3 +35,23 @@ task "buildhost:clean:keepdeps" do
   end
 end
 
+desc "Checks if the needed source revision is available on the build host"
+task "buildhost:check_rev_available" => ["git:gather-rev", "buildhost:repo:update"] do
+  Onartsipac.on_build_host do |host|
+    within repo_path do
+      rev = fetch(:rev)
+      execute :git, "cat-file -e #{rev}^{commit}"
+    end
+  end
+end
+
+desc "Prepare the build path on the build host for building a release"
+task "buildhost:prepare_build_path" => ["buildhost:clean:keepdeps", "buildhost:check_rev_available"] do
+  Onartsipac.on_build_host do |host|
+    within Onartsipac::Buildhost.build_path do
+      rev= fetch(:rev)
+      execute :sh, "-c", "git -C #{repo_path} archive #{rev} | tar xf -".shellescape
+    end
+  end
+end
+

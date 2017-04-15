@@ -1,5 +1,6 @@
 require "onartsipac/version"
 
+load File.expand_path("../capistrano/tasks/git.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 
 module Onartsipac
@@ -16,6 +17,16 @@ module Onartsipac
 
     on hosts do |host|
       instance_eval(&block)
+    end
+  end
+
+  def self.rev_param
+    branch = fetch(:branch) { raise "you need to set :branch to a branch name or :current" }
+
+    if branch == :current
+      "@"
+    else
+      branch
     end
   end
 

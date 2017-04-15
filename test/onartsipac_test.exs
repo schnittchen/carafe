@@ -66,4 +66,11 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy.poptions)
     |> assert_psuccess
   end
+
+  test "preparing the build path", %{dummy: dummy} do
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
+    |> assert_psuccess
+
+    assert File.exists?("/home/user/build_path/mix.exs")
+  end
 end
