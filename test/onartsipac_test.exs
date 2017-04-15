@@ -44,7 +44,7 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy.poptions)
     |> assert_psuccess
 
-    assert !File.exists?("/home/user/build_path")
+    assert !File.exists?(dummy.build_path)
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy.poptions)
     |> assert_psuccess
@@ -60,8 +60,8 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy.poptions)
     |> assert_psuccess
 
-    assert File.exists?("/home/user/build_path/deps/foo")
-    assert !File.exists?("/home/user/build_path/foo")
+    assert File.exists?([dummy.build_path, "deps/foo"] |> Path.join)
+    assert !File.exists?([dummy.build_path, "foo"] |> Path.join)
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy.poptions)
     |> assert_psuccess
@@ -71,7 +71,7 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
     |> assert_psuccess
 
-    assert File.exists?("/home/user/build_path/mix.exs")
+    assert File.exists?([dummy.build_path, "mix.exs"] |> Path.join)
   end
 
   test "executing mix deps.get", %{dummy: dummy} do
@@ -82,7 +82,7 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:deps.get}, dummy.poptions)
     |> assert_psuccess
 
-    assert File.exists?("/home/user/build_path/deps/plug")
+    assert File.exists?([dummy.build_path, "deps/plug"] |> Path.join)
   end
 
 end

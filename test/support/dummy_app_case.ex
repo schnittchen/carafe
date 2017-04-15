@@ -8,7 +8,8 @@ defmodule DummyAppCase do
       :base,
       :local,
       :poptions,
-      :remote
+      :remote,
+      :build_path
     ]
 
     def new(name) do
@@ -18,13 +19,16 @@ defmodule DummyAppCase do
       local = [base, source] |> Path.join
       remote = local
 
+      build_path = "/home/user/build_path"
+
       %__MODULE__{
         name: name,
         source: source,
         base: base,
         local: local,
         poptions: [dir: remote],
-        remote: remote
+        remote: remote,
+        build_path: build_path
       }
     end
   end
