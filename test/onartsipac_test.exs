@@ -8,23 +8,23 @@ defmodule OnartsipacTest do
     File.cp_r! ".", dummy.base
     File.rm_rf! Path.join(dummy.base, ".git")
 
-    Porcelain.exec("git", ~w{-C #{dummy.remote} init})
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("git", ~w{-C #{dummy.remote} init})
 
-    Porcelain.exec("git", ~w{-C #{dummy.remote} config user.name} ++ ["onartsipac test user"])
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("git", ~w{-C #{dummy.remote} config user.name} ++ ["onartsipac test user"])
 
-    Porcelain.exec("git", ~w{-C #{dummy.remote} config user.email onartsipac@example.com})
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("git", ~w{-C #{dummy.remote} config user.email onartsipac@example.com})
 
-    Porcelain.exec("git", ~w{-C #{dummy.remote} add .})
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("git", ~w{-C #{dummy.remote} add .})
 
-    Porcelain.exec("git", ~w{-C #{dummy.remote} commit -m bogus})
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("git", ~w{-C #{dummy.remote} commit -m bogus})
 
-    Porcelain.exec("bundle", [], dummy.poptions)
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("bundle", [], dummy.poptions)
 
     :ok
   end
@@ -38,8 +38,8 @@ defmodule OnartsipacTest do
   end
 
   test "cleaning the build path", %{dummy: dummy} do
-    Porcelain.exec("sudo", ~w{su - user -c} ++ ["touch build_path"])
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("sudo", ~w{su - user -c} ++ ["touch build_path"])
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy.poptions)
     |> assert_psuccess
@@ -51,11 +51,11 @@ defmodule OnartsipacTest do
   end
 
   test "cleaning the build path partially", %{dummy: dummy} do
-    Porcelain.exec("sudo", ~w{su - user -c} ++ ["mkdir -p build_path/foo"])
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("sudo", ~w{su - user -c} ++ ["mkdir -p build_path/foo"])
 
-    Porcelain.exec("sudo", ~w{su - user -c} ++ ["mkdir -p build_path/deps/foo"])
-    |> assert_psuccess
+    %{status: 0} =
+      Porcelain.exec("sudo", ~w{su - user -c} ++ ["mkdir -p build_path/deps/foo"])
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy.poptions)
     |> assert_psuccess
@@ -76,7 +76,7 @@ defmodule OnartsipacTest do
 
   test "executing mix deps.get", %{dummy: dummy} do
     # buildhost:mix:deps.get does not depend on :prepare_build_path to make debugging easier
-    %{err: nil, status: 0} =
+    %{status: 0} =
       Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:deps.get}, dummy.poptions)
