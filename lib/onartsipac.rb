@@ -4,7 +4,7 @@ load File.expand_path("../capistrano/tasks/git.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 
 module Onartsipac
-  def self.on_build_host(&block)
+  def self.build_host
     hosts = roles(:build)
 
     if hosts.none?
@@ -15,9 +15,7 @@ module Onartsipac
       raise "There can only be one build host."
     end
 
-    on hosts do |host|
-      instance_eval(&block)
-    end
+    hosts.first
   end
 
   def self.rev_param
