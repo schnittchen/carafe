@@ -5,7 +5,7 @@ defmodule DummyAppCase do
     defstruct [
       :name,
       :source,
-      :local_base,
+      :base,
       :local,
       :poptions,
       :remote
@@ -13,13 +13,15 @@ defmodule DummyAppCase do
 
     def new(name) do
       source = ["dummies", name] |> Path.join
-      local_base = ["~/locals", name] |> Path.join |> Path.expand
-      local = [local_base, source] |> Path.join
-      remote = ["/tmp", "repo_#{name}"] |> Path.join
+
+      base = ["/tmp/bases", name] |> Path.join |> Path.expand
+      local = [base, source] |> Path.join
+      remote = local
+
       %__MODULE__{
         name: name,
         source: source,
-        local_base: local_base,
+        base: base,
         local: local,
         poptions: [dir: remote],
         remote: remote
