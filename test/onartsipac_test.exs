@@ -2,14 +2,9 @@ defmodule OnartsipacTest do
   use DummyAppCase, async: false
 
   setup do
-    Porcelain.exec("rm", ~w{-rf /tmp/repo})
-    |> assert_psuccess
-
-    Porcelain.exec("mkdir", ~w{-p /tmp/repo})
-    |> assert_psuccess
-
-    Porcelain.exec("cp", ~w{-R #{dummy_app_path()} /tmp/repo})
-    |> assert_psuccess
+    File.rm_rf! "/tmp/repo"
+    File.mkdir! "/tmp/repo"
+    File.cp_r! dummy_app_path(), "/tmp/repo"
 
     Porcelain.exec("git", ~w{-C /tmp/repo init})
     |> assert_psuccess
@@ -47,8 +42,7 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy_app_poptions())
     |> assert_psuccess
 
-    Porcelain.exec("sudo", ~w{su - user -c} ++ ["[ ! -e build_path ]"])
-    |> assert_psuccess
+    assert !File.exists?("/home/user/build_path")
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean}, dummy_app_poptions())
     |> assert_psuccess
@@ -64,11 +58,8 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy_app_poptions())
     |> assert_psuccess
 
-    Porcelain.exec("sudo", ~w{su - user -c} ++ ["[ -e build_path/deps/foo ]"])
-    |> assert_psuccess
-
-    Porcelain.exec("sudo", ~w{su - user -c} ++ ["[ ! -e build_path/foo ]"])
-    |> assert_psuccess
+    assert File.exists?("/home/user/build_path/deps/foo")
+    assert !File.exists?("/home/user/build_path/foo")
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:clean:keepdeps}, dummy_app_poptions())
     |> assert_psuccess
