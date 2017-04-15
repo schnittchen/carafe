@@ -13,7 +13,13 @@ cd ~; ssh-keygen -f ".ssh/id_rsa" -t rsa -N ""; cd -
 sudo rm /etc/profile.d/rvm.sh
 
 sudo useradd -m user
-sudo su -l user -c bash -c "mkdir .ssh && touch .ssh/authorized_keys"
+sudo su -l user -c bash -c "mkdir .ssh && touch .ssh/authorized_keys && touch .pam_environment"
+
+# Apparently travis manages elixir versions with kiex. Let's hope copying over the
+# PATH env to the other user will be sufficient for a while.
+# Also make sure plain processes executed via ssh (not via a login shell)
+# pick this up
+echo PATH="$PATH" | sudo bash -c "cat >> /home/user/.pam_environment"
 
 pubfile=~/.ssh/id_rsa.pub
 authfile=~user/.ssh/authorized_keys
