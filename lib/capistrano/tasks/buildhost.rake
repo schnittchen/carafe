@@ -68,3 +68,20 @@ task "buildhost:mix:deps.get" do
   end
 end
 
+desc "Execute `mix compile` on the build host"
+task "buildhost:mix:compile" do
+  on Onartsipac.build_host do |host|
+    within Onartsipac::Buildhost.build_path do
+      with Onartsipac::Buildhost.mix_env_with_arg do
+        execute :mix, "compile"
+      end
+    end
+  end
+end
+
+desc "Compile entire project at the build path on the build host"
+task "buildhost:compile" => [
+  "buildhost:mix:deps.get",
+  "buildhost:mix:compile"
+]
+
