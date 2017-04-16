@@ -9,6 +9,10 @@ defmodule OnartsipacTest do
     File.rm_rf! Path.join(dummy.base, ".git")
 
     %{status: 0} =
+      Porcelain.exec("find", ~w<#{dummy.remote} -name mix.exs -exec sed -i
+        s|__ONARTSIPAC_BASE__|#{dummy.base}| {} ;>)
+
+    %{status: 0} =
       Porcelain.exec("git", ~w{-C #{dummy.remote} init})
 
     %{status: 0} =
