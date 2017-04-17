@@ -1,4 +1,4 @@
-task "git:gather-rev" do
+task "local:gather-rev" do
   rev =
     run_locally do
       capture :git, "rev-parse", Onartsipac.rev_param

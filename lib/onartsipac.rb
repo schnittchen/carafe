@@ -1,6 +1,6 @@
 require "onartsipac/version"
 
-load File.expand_path("../capistrano/tasks/git.rake", __FILE__)
+load File.expand_path("../capistrano/tasks/local.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 
 module Onartsipac

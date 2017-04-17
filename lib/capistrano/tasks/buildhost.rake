@@ -36,7 +36,7 @@ task "buildhost:clean:keepdeps" do
 end
 
 desc "Checks if the needed source revision is available on the build host"
-task "buildhost:check_rev_available" => ["git:gather-rev", "buildhost:repo:update"] do
+task "buildhost:check_rev_available" => ["local:gather-rev", "buildhost:repo:update"] do
   on Onartsipac.build_host do |host|
     within repo_path do
       rev = fetch(:rev)
