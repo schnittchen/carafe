@@ -85,3 +85,22 @@ task "buildhost:compile" => [
   "buildhost:mix:compile"
 ]
 
+desc "Execute `mix release` on the build host"
+task "buildhost:mix:release" do
+  on Onartsipac.build_host do |host|
+    within Onartsipac::Buildhost.build_path do
+      with Onartsipac::Buildhost.mix_env_with_arg do
+        execute :mix, "release", "--env=#{Onartsipac.distillery_environment}"
+      end
+    end
+  end
+end
+
+desc "Generate release on the build host"
+task "buildhost:generate_release" => [
+  "buildhost:prepare_build_path",
+  "buildhost:mix:deps.get",
+  "buildhost:mix:compile",
+  "buildhost:mix:release"
+]
+

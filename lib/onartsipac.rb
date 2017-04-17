@@ -28,6 +28,14 @@ module Onartsipac
     end
   end
 
+  def self.mix_env
+    fetch(:mix_env) { raise "set :mix_env in stage config!" }
+  end
+
+  def self.distillery_environment
+    fetch(:distillery_environment) { mix_env }
+  end
+
   module Buildhost
     def self.git
       Capistrano::SCM::Git.new
@@ -38,8 +46,7 @@ module Onartsipac
     end
 
     def self.mix_env_with_arg
-      mix_env = fetch(:mix_env) { raise "set :mix_env in stage config!" }
-      { mix_env: mix_env }
+      { mix_env: Onartsipac.mix_env }
     end
   end
 end

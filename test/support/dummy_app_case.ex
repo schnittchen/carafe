@@ -4,6 +4,7 @@ defmodule DummyAppCase do
   defmodule Dummy do
     defstruct [
       :name,
+      :version,
       :source,
       :base,
       :local,
@@ -23,6 +24,7 @@ defmodule DummyAppCase do
 
       %__MODULE__{
         name: name,
+        version: "0.1.0",
         source: source,
         base: base,
         local: local,

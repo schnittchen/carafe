@@ -89,4 +89,19 @@ defmodule OnartsipacTest do
     assert File.exists?([dummy.build_path, "_build/prod/lib/dummy1"] |> Path.join)
   end
 
+  test "executing mix release", %{dummy: dummy} do
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:compile}, dummy.poptions)
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:release}, dummy.poptions)
+    |> assert_psuccess
+
+    distillery_env = dummy.name # TODO
+    assert File.exists?(
+      [dummy.build_path,
+       "rel/#{distillery_env}/releases/#{dummy.version}/#{distillery_env}.tar.gz"] |> Path.join)
+  end
 end
