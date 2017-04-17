@@ -71,17 +71,11 @@ defmodule OnartsipacTest do
     |> assert_psuccess
   end
 
-  test "preparing the build path", %{dummy: dummy} do
+  test "preparing the build path and compiling", %{dummy: dummy} do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
     |> assert_psuccess
 
     assert File.exists?([dummy.build_path, "mix.exs"] |> Path.join)
-  end
-
-  test "compiling", %{dummy: dummy} do
-    # buildhost:compile does not depend on :prepare_build_path to make debugging easier
-    %{status: 0} =
-      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
 
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:compile}, dummy.poptions)
     |> assert_psuccess
