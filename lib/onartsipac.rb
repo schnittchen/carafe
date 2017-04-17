@@ -29,7 +29,11 @@ module Onartsipac
   end
 
   def self.mix_env
-    fetch(:mix_env) { raise "set :mix_env in stage config!" }
+    fetch(:mix_env) { raise "set :mix_env in stage config!" }.to_s
+  end
+
+  def self.distillery_release
+    fetch(:application) { raise }
   end
 
   def self.distillery_environment
@@ -42,11 +46,20 @@ module Onartsipac
     end
 
     def self.build_path
-      fetch(:build_path) { raise "no build_path configured" }
+      Pathname(fetch(:build_path) { raise "no build_path configured" })
     end
 
     def self.mix_env_with_arg
       { mix_env: Onartsipac.mix_env }
+    end
+
+    def self.archive_path
+      vsn = fetch(:vsn) {
+        raise ArgumentError, "Internal error, dependency on buildhost:gather-vsn missing"
+      }
+
+      build_path.join("rel", Onartsipac.distillery_release,
+        "releases", vsn, "#{Onartsipac.distillery_release}.tar.gz")
     end
   end
 end

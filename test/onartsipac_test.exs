@@ -98,4 +98,21 @@ defmodule OnartsipacTest do
       [dummy.build_path,
        "rel/#{distillery_env}/releases/#{dummy.version}/#{distillery_env}.tar.gz"] |> Path.join)
   end
+
+  test "downloading a release archive", %{dummy: dummy} do
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:compile}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:release}, dummy.poptions)
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:archive:download}, dummy.poptions)
+    |> assert_psuccess
+
+    assert File.exists?(
+      [dummy.remote, "foo.tar.gz"] |> Path.join)
+  end
 end

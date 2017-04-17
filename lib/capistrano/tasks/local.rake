@@ -7,5 +7,3 @@ task "local:gather-rev" do
   set :rev, rev
   set :abbrev_rev, rev[0..9]
 end
-
-

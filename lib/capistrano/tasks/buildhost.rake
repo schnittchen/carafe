@@ -104,3 +104,24 @@ task "buildhost:generate_release" => [
   "buildhost:mix:release"
 ]
 
+task "buildhost:gather-vsn" do
+  on Onartsipac.build_host do |host|
+    within Onartsipac::Buildhost.build_path do
+      with Onartsipac::Buildhost.mix_env_with_arg do
+        arg =
+          "Mix.Project.config[:version] |> IO.puts".shellescape # why, o-why?
+
+        vsn = capture(:mix, "run", "-e", arg).chomp
+        raise ArgumentError if vsn.empty?
+
+        set :vsn, vsn
+      end
+    end
+  end
+end
+
+task "buildhost:archive:download" => "buildhost:gather-vsn" do
+  on Onartsipac.build_host do |host|
+    download! Onartsipac::Buildhost.archive_path, "foo.tar.gz"
+  end
+end
