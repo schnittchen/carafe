@@ -131,10 +131,11 @@ task "buildhost:archive_path" => "buildhost:gather-vsn" do
   set :buildhost_archive_path, archive_path
 end
 
-task "buildhost:archive:download" => ["buildhost:archive_path"] do
+task "buildhost:archive:download" => ["buildhost:archive_path", "local:archive_path"] do
   buildhost_archive_path = fetch(:buildhost_archive_path)
+  local_archive_path = fetch(:local_archive_path)
 
   on Onartsipac.build_host do |host|
-    download! buildhost_archive_path, "foo.tar.gz"
+    download! buildhost_archive_path, local_archive_path
   end
 end

@@ -113,6 +113,6 @@ defmodule OnartsipacTest do
     |> assert_psuccess
 
     assert File.exists?(
-      [dummy.remote, "foo.tar.gz"] |> Path.join)
+      [dummy.remote, "archive.tar.gz"] |> Path.join)
   end
 end
