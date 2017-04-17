@@ -52,14 +52,5 @@ module Onartsipac
     def self.mix_env_with_arg
       { mix_env: Onartsipac.mix_env }
     end
-
-    def self.archive_path
-      vsn = fetch(:vsn) {
-        raise ArgumentError, "Internal error, dependency on buildhost:gather-vsn missing"
-      }
-
-      build_path.join("rel", Onartsipac.distillery_release,
-        "releases", vsn, "#{Onartsipac.distillery_release}.tar.gz")
-    end
   end
 end

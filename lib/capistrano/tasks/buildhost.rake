@@ -120,8 +120,21 @@ task "buildhost:gather-vsn" do
   end
 end
 
-task "buildhost:archive:download" => "buildhost:gather-vsn" do
+task "buildhost:archive_path" => "buildhost:gather-vsn" do
+  vsn = fetch(:vsn)
+
+  archive_path =
+    Onartsipac::Buildhost.build_path.join(
+      "rel", Onartsipac.distillery_release,
+      "releases", vsn, "#{Onartsipac.distillery_release}.tar.gz")
+
+  set :buildhost_archive_path, archive_path
+end
+
+task "buildhost:archive:download" => ["buildhost:archive_path"] do
+  buildhost_archive_path = fetch(:buildhost_archive_path)
+
   on Onartsipac.build_host do |host|
-    download! Onartsipac::Buildhost.archive_path, "foo.tar.gz"
+    download! buildhost_archive_path, "foo.tar.gz"
   end
 end
