@@ -10,7 +10,8 @@ defmodule DummyAppCase do
       :local,
       :poptions,
       :remote,
-      :build_path
+      :build_path,
+      :app_path
     ]
 
     def new(name) do
@@ -22,6 +23,8 @@ defmodule DummyAppCase do
 
       build_path = "/home/user/build_path"
 
+      app_path = "/home/user/app_path"
+
       %__MODULE__{
         name: name,
         version: "0.1.0",
@@ -30,7 +33,8 @@ defmodule DummyAppCase do
         local: local,
         poptions: [dir: remote],
         remote: remote,
-        build_path: build_path
+        build_path: build_path,
+        app_path: app_path
       }
     end
   end

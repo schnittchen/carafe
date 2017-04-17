@@ -115,4 +115,21 @@ defmodule OnartsipacTest do
     assert File.exists?(
       [dummy.remote, "archive.tar.gz"] |> Path.join)
   end
+
+  test "uploading and unpacking a release archive", %{dummy: dummy} do
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:compile}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:release}, dummy.poptions)
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:archive:download node:archive:upload_and_unpack}, dummy.poptions)
+    |> assert_psuccess
+
+    assert File.exists?(
+      [dummy.app_path, "bin/#{dummy.name}"] |> Path.join)
+  end
 end

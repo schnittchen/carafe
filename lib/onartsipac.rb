@@ -2,6 +2,7 @@ require "onartsipac/version"
 
 load File.expand_path("../capistrano/tasks/local.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
+load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Onartsipac
   def self.build_host
@@ -51,6 +52,20 @@ module Onartsipac
 
     def self.mix_env_with_arg
       { mix_env: Onartsipac.mix_env }
+    end
+  end
+
+  module Node
+    def self.app_path
+      Pathname(fetch(:app_path) { raise "set :app_path node path where the release is unpacked an run" })
+    end
+
+    def self.hosts
+      hosts = roles(:app)
+      if hosts.none?
+        raise "No hosts have been configured with role 'app'"
+      end
+      hosts
     end
   end
 end
