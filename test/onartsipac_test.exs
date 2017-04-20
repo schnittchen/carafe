@@ -93,7 +93,7 @@ defmodule OnartsipacTest do
     Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:release}, dummy.poptions)
     |> assert_psuccess
 
-    distillery_env = dummy.name # TODO
+    distillery_env = dummy.name # TODO: make this configurable
     assert File.exists?(
       [dummy.build_path,
        "rel/#{distillery_env}/releases/#{dummy.version}/#{distillery_env}.tar.gz"] |> Path.join)
