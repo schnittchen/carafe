@@ -132,4 +132,39 @@ defmodule OnartsipacTest do
     assert File.exists?(
       [dummy.app_path, "bin/#{dummy.name}"] |> Path.join)
   end
+
+  test "basic interaction with nodes", %{dummy: dummy} do
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:prepare_build_path}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:compile}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:mix:release}, dummy.poptions)
+
+    %{status: 0} =
+      Porcelain.exec("bundle", ~w{exec cap --trace production buildhost:archive:download node:archive:upload_and_unpack}, dummy.poptions)
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:ping}, dummy.poptions)
+    |> assert_pfailure
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:start}, dummy.poptions)
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:start}, dummy.poptions)
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:ping}, dummy.poptions)
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:stop}, dummy.poptions)
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:stop}, dummy.poptions)
+    |> assert_pfailure
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:ping}, dummy.poptions)
+    |> assert_pfailure
+  end
 end

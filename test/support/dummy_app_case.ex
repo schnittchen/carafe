@@ -61,11 +61,18 @@ defmodule DummyAppCase do
   end
 
   def assert_psuccess(%{err: nil, status: status} = result) do
-    IO.puts result.out
     flunk "Error: Exit status #{status}"
   end
 
   def assert_psuccess(result) do
     flunk "Error: #{result.err}"
+  end
+
+  def assert_pfailure(%{status: 0}) do
+    flunk "Error: status code was 0"
+  end
+
+  def assert_pfailure(%{status: status} = result) when is_integer(status) do
+    result
   end
 end
