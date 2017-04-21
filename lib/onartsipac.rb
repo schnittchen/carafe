@@ -1,7 +1,8 @@
 require "onartsipac/version"
 
-load File.expand_path("../capistrano/tasks/git.rake", __FILE__)
+load File.expand_path("../capistrano/tasks/local.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
+load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Onartsipac
   def self.build_host
@@ -28,18 +29,43 @@ module Onartsipac
     end
   end
 
+  def self.mix_env
+    fetch(:mix_env) { raise "set :mix_env in stage config!" }.to_s
+  end
+
+  def self.distillery_release
+    fetch(:application) { raise }
+  end
+
+  def self.distillery_environment
+    fetch(:distillery_environment) { mix_env }
+  end
+
   module Buildhost
     def self.git
       Capistrano::SCM::Git.new
     end
 
     def self.build_path
-      fetch(:build_path) { raise "no build_path configured" }
+      Pathname(fetch(:build_path) { raise "no build_path configured" })
     end
 
     def self.mix_env_with_arg
-      mix_env = fetch(:mix_env) { raise "set :mix_env in stage config!" }
-      { mix_env: mix_env }
+      { mix_env: Onartsipac.mix_env }
+    end
+  end
+
+  module Node
+    def self.app_path
+      Pathname(fetch(:app_path) { raise "set :app_path node path where the release is unpacked an run" })
+    end
+
+    def self.hosts
+      hosts = roles(:app)
+      if hosts.none?
+        raise "No hosts have been configured with role 'app'"
+      end
+      hosts
     end
   end
 end

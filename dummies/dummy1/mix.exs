@@ -28,6 +28,8 @@ defmodule Dummy1.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:plug, "~> 1.3"}]
+    [
+      {:onartsipac, path: "__ONARTSIPAC_BASE__"} # the path will be replaced in CI
+    ]
   end
 end
