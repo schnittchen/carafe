@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock "3.8.0"
+lock "~> 3.8.0"
 
 set :application, "dummy1"
 set :repo_url, "/tmp/bases/dummy1/dummies/dummy1/"
