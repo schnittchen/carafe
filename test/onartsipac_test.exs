@@ -3,6 +3,13 @@ defmodule OnartsipacTest do
   use DummyAppCase, async: false
 
   setup %{dummy: dummy} do
+    # Kill leftover processes
+    %{status: status} =
+      Porcelain.exec("sudo", ~w{su - user -c} ++ ["pkill -f ^#{dummy.app_path |> Regex.escape}.*run_erl"])
+    if !(status in [0,1]) do
+      raise "failed to pkill old processes"
+    end
+
     File.rm_rf! dummy.base
     File.mkdir_p! dummy.base
     File.cp_r! ".", dummy.base
