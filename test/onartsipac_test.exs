@@ -166,5 +166,11 @@ defmodule OnartsipacTest do
 
     Porcelain.exec("bundle", ~w{exec cap --trace production node:ping}, dummy.poptions)
     |> assert_pfailure
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:full_restart}, dummy.poptions)
+    |> assert_psuccess
+
+    Porcelain.exec("bundle", ~w{exec cap --trace production node:full_restart}, dummy.poptions)
+    |> assert_psuccess
   end
 end

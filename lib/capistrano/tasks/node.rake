@@ -63,3 +63,58 @@ task "node:stop" do
   end
 end
 
+task "node:stop-if-running" do
+  script = Onartsipac.distillery_release
+  on Onartsipac::Node.hosts do |host|
+    within Onartsipac::Node.app_path do
+      if test("bin/#{script}", "ping")
+        execute "bin/#{script}", "stop"
+      end
+    end
+  end
+end
+
+desc "Restarts the node, making sure a new version (including ERTS) is booted."
+task "node:full_restart" => ["node:stop-if-running", "node:start"] do
+  script = Onartsipac.distillery_release
+  app = Onartsipac::Node.app_name
+
+  # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
+  on Onartsipac::Node.hosts do |host|
+    within Onartsipac::Node.app_path do
+      execute <<-EOS
+        for i in {1..10}; do bin/#{script} ping && break || true; sleep 1; done
+      EOS
+
+      execute "bin/#{script}", <<-EOS
+      rpcterms Elixir.Edeliver run_command '[monitor_startup_progress, \"#{app}\", verbose].' | grep -e 'Started\\|^ok'
+      EOS
+    end
+  end
+end
+
+desc "Attach to a running node, for introspection"
+task "node:attach" do
+  script = Onartsipac.distillery_release
+  on Onartsipac::Node.hosts do |host|
+
+    puts "Attaching to node. When you are done, make sure to detach with Ctrl-D (otherwise node goes down)"
+
+    # This does not respect the configured host's ssh_options,
+    # and depends on the ssh binary of the local host.
+
+    args =
+      [
+        "-l#{host.user}",
+        "-t",
+        ("-p#{host.port}" if host.port),
+        host.hostname,
+        "sh -c 'cd #{Onartsipac::Node.app_path} && bin/#{script} attach'"
+      ].compact
+
+    pid = spawn("ssh", *args)
+    Process.waitpid(pid, Process::WUNTRACED)
+    raise "Error, node probably not running" unless $?.success?
+  end
+end
+

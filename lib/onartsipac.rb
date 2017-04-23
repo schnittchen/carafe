@@ -60,6 +60,10 @@ module Onartsipac
       Pathname(fetch(:app_path) { raise "set :app_path node path where the release is unpacked an run" })
     end
 
+    def self.app_name
+      fetch(:application) { raise }
+    end
+
     def self.hosts
       hosts = roles(:app)
       if hosts.none?
