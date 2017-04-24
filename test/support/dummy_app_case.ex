@@ -5,7 +5,7 @@ defmodule DummyAppCase do
     defstruct [
       :name,
       :version,
-      :source,
+
       :onartsipac_path,
       :poptions,
       :remote,
@@ -14,20 +14,18 @@ defmodule DummyAppCase do
     ]
 
     def new(name) do
-      source = ["dummies", name] |> Path.join
+      relative = ["dummies", name] |> Path.join
 
       onartsipac_path = ["/tmp/working_paths", name] |> Path.join |> Path.expand
-      local = [onartsipac_path, source] |> Path.join
+      local = [onartsipac_path, relative] |> Path.join
       remote = local
 
       build_path = "/home/user/build_path"
-
       app_path = "/home/user/app_path"
 
       %__MODULE__{
         name: name,
         version: "0.1.0",
-        source: source,
         onartsipac_path: onartsipac_path,
         poptions: [dir: remote],
         remote: remote,
