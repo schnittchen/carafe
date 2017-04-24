@@ -32,7 +32,7 @@ defmodule Dummy1.Mixfile do
       {:edeliver, "~> 1.4.2"},
       {:distillery, "~> 0.9"}, # even though onartsipac already depends on distillery,
         # edeliver complains it cannot detect it.
-      {:onartsipac, path: "__ONARTSIPAC_BASE__"} # the path will be replaced in CI
+      {:onartsipac, path: "__ONARTSIPAC_PATH__"} # the path will be replaced in CI
     ]
   end
 end

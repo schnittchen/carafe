@@ -10,14 +10,14 @@ defmodule OnartsipacTest do
       raise "failed to pkill old processes"
     end
 
-    File.rm_rf! dummy.base
-    File.mkdir_p! dummy.base
-    File.cp_r! ".", dummy.base
-    File.rm_rf! Path.join(dummy.base, ".git")
+    File.rm_rf! dummy.onartsipac_path
+    File.mkdir_p! dummy.onartsipac_path
+    File.cp_r! ".", dummy.onartsipac_path
+    File.rm_rf! Path.join(dummy.onartsipac_path, ".git")
 
     %{status: 0} =
       Porcelain.exec("find", ~w<#{dummy.remote} -name mix.exs -exec sed -i
-        s|__ONARTSIPAC_BASE__|#{dummy.base}| {} ;>)
+        s|__ONARTSIPAC_PATH__|#{dummy.onartsipac_path}| {} ;>)
 
     %{status: 0} =
       Porcelain.exec("git", ~w{-C #{dummy.remote} init})

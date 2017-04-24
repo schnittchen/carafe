@@ -6,7 +6,7 @@ defmodule DummyAppCase do
       :name,
       :version,
       :source,
-      :base,
+      :onartsipac_path,
       :poptions,
       :remote,
       :build_path,
@@ -16,8 +16,8 @@ defmodule DummyAppCase do
     def new(name) do
       source = ["dummies", name] |> Path.join
 
-      base = ["/tmp/bases", name] |> Path.join |> Path.expand
-      local = [base, source] |> Path.join
+      onartsipac_path = ["/tmp/working_paths", name] |> Path.join |> Path.expand
+      local = [onartsipac_path, source] |> Path.join
       remote = local
 
       build_path = "/home/user/build_path"
@@ -28,7 +28,7 @@ defmodule DummyAppCase do
         name: name,
         version: "0.1.0",
         source: source,
-        base: base,
+        onartsipac_path: onartsipac_path,
         poptions: [dir: remote],
         remote: remote,
         build_path: build_path,
