@@ -2,30 +2,17 @@ defmodule OnartsipacTest do
   @dummy_name "dummy1"
   use DummyAppCase, async: false
 
+  alias DummyAppCase.Dummy
+
   setup %{dummy: dummy} do
-    # Kill leftover processes
-    Enamel.new(as: "user", good_exits: [0, 1])
-    |> Enamel.command([~w{pkill -f}, "^#{dummy.app_path |> Regex.escape}.*run_erl"])
-    |> Enamel.run!
+    dummy =
+      dummy
+      |> Dummy.kill_stray_processes
+      |> Dummy.prepare_onartsipac_path(from: ".")
+      |> Dummy.prepare_working_directory
+      |> Dummy.prepare_remote
 
-    File.rm_rf! dummy.onartsipac_path
-    File.mkdir_p! dummy.onartsipac_path
-    File.cp_r! ".", dummy.onartsipac_path
-    File.rm_rf! Path.join(dummy.onartsipac_path, ".git")
-
-    Enamel.command([:find, dummy.remote, ~w<-name mix.exs -exec sed -i
-      s|__ONARTSIPAC_PATH__|#{dummy.onartsipac_path}| {} ;>])
-    |> Enamel.run!
-
-    Enamel.command([~w{git -C}, dummy.remote, :init])
-    |> Enamel.command([~w{git -C}, dummy.remote, ~w{config user.name}, "onartsipac test user"])
-    |> Enamel.command([~w{git -C}, dummy.remote, ~w{config user.email onartsipac@example.com}])
-    |> Enamel.command([~w{git -C}, dummy.remote, ~w{add .}])
-    |> Enamel.command([~w{git -C}, dummy.remote, ~w{commit -m bogus}])
-    |> Enamel.command([:bundle], dir: dummy.remote)
-    |> Enamel.run!
-
-    :ok
+    {:ok, %{dummy: dummy}}
   end
 
   test "updating the repo cache", %{dummy: dummy} do
