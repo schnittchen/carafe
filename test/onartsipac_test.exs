@@ -4,17 +4,6 @@ defmodule OnartsipacTest do
 
   alias DummyAppCase.Dummy
 
-  setup %{dummy: dummy} do
-    dummy =
-      dummy
-      |> Dummy.kill_stray_processes
-      |> Dummy.prepare_onartsipac_path(from: ".")
-      |> Dummy.prepare_working_directory
-      |> Dummy.prepare_remote
-
-    {:ok, %{dummy: dummy}}
-  end
-
   test "updating the repo cache", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:repo:update})
