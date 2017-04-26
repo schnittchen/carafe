@@ -29,7 +29,7 @@ defmodule OnartsipacTest do
   end
 
   test "updating the repo cache", %{dummy: dummy} do
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:repo:update})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:repo:update})
     |> Enamel.run!
@@ -40,7 +40,7 @@ defmodule OnartsipacTest do
     |> Enamel.command([:touch, dummy.build_path])
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean})
     |> Enamel.run!
@@ -54,7 +54,7 @@ defmodule OnartsipacTest do
     |> Enamel.command([~w{mkdir -p}, "#{dummy.build_path}/deps/foo"])
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean:keepdeps})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean:keepdeps})
     |> Enamel.run!
@@ -64,7 +64,7 @@ defmodule OnartsipacTest do
   end
 
   test "preparing the build path and compiling", %{dummy: dummy} do
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:compile})
     |> Enamel.run!
@@ -73,12 +73,12 @@ defmodule OnartsipacTest do
   end
 
   test "executing mix release", %{dummy: dummy} do
-    Enamel.new(dir: dummy.remote)
+    Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:compile})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
@@ -89,28 +89,28 @@ defmodule OnartsipacTest do
   end
 
   test "downloading a release archive", %{dummy: dummy} do
-    Enamel.new(dir: dummy.remote)
+    Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:compile})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:archive:download})
     |> Enamel.run!
 
     assert File.exists?(
-      [dummy.remote, "archive.tar.gz"] |> Path.join)
+      [dummy.capistrano_wd, "archive.tar.gz"] |> Path.join)
   end
 
   test "uploading and unpacking a release archive", %{dummy: dummy} do
-    Enamel.new(dir: dummy.remote)
+    Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:compile})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:archive:download node:archive:upload_and_unpack})
     |> Enamel.run!
 
@@ -119,14 +119,14 @@ defmodule OnartsipacTest do
   end
 
   test "basic interaction with nodes", %{dummy: dummy} do
-    Enamel.new(dir: dummy.remote)
+    Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:compile})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:archive:download node:archive:upload_and_unpack})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.remote)
+    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
     |> Enamel.command(~w{bundle exec cap --trace production node:start})
     |> Enamel.command(~w{bundle exec cap --trace production node:start})

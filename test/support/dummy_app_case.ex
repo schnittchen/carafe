@@ -6,19 +6,22 @@ defmodule DummyAppCase do
       :name,
       :version,
 
-      :onartsipac_path,
-      :poptions,
-      :remote,
-      :build_path,
-      :app_path
+      :onartsipac_path, # where a copy of this entire repo is placed for this dummy app
+      :remote, # git remote / dummy repository, used by build steps
+      :capistrano_wd, # working dir when executing bundler and capistrano
+
+      :build_path, # like in the dummy's deploy config, but absolute
+      :app_path # like in the dummy's deploy config, but absolute
     ]
 
     def new(name) do
       relative = ["dummies", name] |> Path.join
 
       onartsipac_path = ["/tmp/working_paths", name] |> Path.join |> Path.expand
+
       local = [onartsipac_path, relative] |> Path.join
       remote = local
+      capistrano_wd = local
 
       build_path = "/home/user/build_path"
       app_path = "/home/user/app_path"
@@ -27,8 +30,8 @@ defmodule DummyAppCase do
         name: name,
         version: "0.1.0",
         onartsipac_path: onartsipac_path,
-        poptions: [dir: remote],
         remote: remote,
+        capistrano_wd: capistrano_wd,
         build_path: build_path,
         app_path: app_path
       }
