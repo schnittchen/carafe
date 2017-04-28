@@ -5,37 +5,66 @@ defmodule DummyAppCase do
     defstruct [
       :name,
       :version,
-      :source,
-      :base,
-      :local,
-      :poptions,
-      :remote,
-      :build_path,
-      :app_path
+
+      :onartsipac_path, # where a copy of this entire repo is placed for this dummy app
+      :remote, # git remote / dummy repository, used by build steps
+      :capistrano_wd, # working dir when executing bundler and capistrano
+
+      :build_path, # like in the dummy's deploy config, but absolute
+      :app_path # like in the dummy's deploy config, but absolute
     ]
 
     def new(name) do
-      source = ["dummies", name] |> Path.join
-
-      base = ["/tmp/bases", name] |> Path.join |> Path.expand
-      local = [base, source] |> Path.join
-      remote = local
-
       build_path = "/home/user/build_path"
-
       app_path = "/home/user/app_path"
 
       %__MODULE__{
         name: name,
         version: "0.1.0",
-        source: source,
-        base: base,
-        local: local,
-        poptions: [dir: remote],
-        remote: remote,
         build_path: build_path,
         app_path: app_path
       }
+    end
+
+    def kill_stray_processes(%__MODULE__{app_path: app_path} = dummy) do
+      Enamel.new(as: "user", good_exits: [0, 1])
+      |> Enamel.command([~w{pkill -f}, "^#{app_path |> Regex.escape}.*run_erl"])
+      |> Enamel.run!
+
+      dummy
+    end
+
+    def prepare_onartsipac_path(%__MODULE__{name: name} = dummy, from: ".") do
+      onartsipac_path = ["/tmp/working_paths", name] |> Path.join |> Path.expand
+
+      File.rm_rf! onartsipac_path
+      File.mkdir_p! onartsipac_path
+      File.cp_r! ".", onartsipac_path
+      File.rm_rf! Path.join(onartsipac_path, ".git")
+
+      %{ dummy | onartsipac_path: onartsipac_path }
+    end
+
+    def prepare_working_directory(%__MODULE__{name: name, onartsipac_path: onartsipac_path} = dummy) when is_binary(onartsipac_path) do
+      capistrano_wd = [onartsipac_path, "dummies", name] |> Path.join
+
+      Enamel.command([:find, capistrano_wd, ~w<-name mix.exs -exec sed -i
+        s|__ONARTSIPAC_PATH__|#{onartsipac_path}| {} ;>])
+      |> Enamel.command([:bundle], dir: capistrano_wd)
+      |> Enamel.run!
+
+      %{ dummy | capistrano_wd: capistrano_wd }
+    end
+
+    def prepare_remote(%__MODULE__{capistrano_wd: capistrano_wd} = dummy) when is_binary(capistrano_wd) do
+      Enamel.command([~w{git -C}, dummy.capistrano_wd, :init])
+      |> Enamel.command([~w{git -C}, dummy.capistrano_wd, ~w{config user.name}, "onartsipac test user"])
+      |> Enamel.command([~w{git -C}, dummy.capistrano_wd, ~w{config user.email onartsipac@example.com}])
+      |> Enamel.command([~w{git -C}, dummy.capistrano_wd, ~w{add .}])
+      |> Enamel.command([~w{git -C}, dummy.capistrano_wd, ~w{commit -m bogus}])
+      |> Enamel.run!
+
+      %{ dummy | remote: capistrano_wd }
     end
   end
 
@@ -45,7 +74,12 @@ defmodule DummyAppCase do
 
       setup do
         "" <> name = @dummy_name
-        dummy = Dummy.new(name)
+        dummy =
+          Dummy.new(name)
+          |> Dummy.kill_stray_processes
+          |> Dummy.prepare_onartsipac_path(from: ".")
+          |> Dummy.prepare_working_directory
+          |> Dummy.prepare_remote
 
         {:ok, %{dummy: dummy}}
       end
