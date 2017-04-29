@@ -2,7 +2,7 @@ task "node:archive:upload_and_unpack" => "local:archive_path" do
   local_archive_path = fetch(:local_archive_path)
 
   Rake::Task["node:archive:upload"].invoke(local_archive_path)
-  Rake::Task["node:archive:unpack"].invoke(local_archive_path)
+  Rake::Task["node:archive:unpack"].invoke
 end
 
 task "node:archive:upload", [:archive_path] => "local:archive_path" do |t, args|
