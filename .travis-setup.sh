@@ -4,13 +4,20 @@ set -x
 set -e
 set -u
 
-sudo apt-get -qq update
-sudo apt-get install -y ruby
+if ! which mix; then
+  wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+  sudo dpkg -i erlang-solutions_1.0_all.deb
+  sudo apt-get -qq update
+  sudo apt-get install -y esl-erlang elixir
+fi
 
-cd ~; ssh-keygen -f ".ssh/id_rsa" -t rsa -N ""; cd -
+sudo apt-get -qq update
+sudo apt-get install -y ruby ruby-bundler
+
+cd ~; mkdir -p .ssh; ssh-keygen -f ".ssh/id_rsa" -t rsa -N ""; cd -
 
 # travis what are you doing there?
-sudo rm /etc/profile.d/rvm.sh
+sudo rm -f /etc/profile.d/rvm.sh
 
 sudo useradd -m user
 sudo su -l user -c bash -c "mkdir .ssh && touch .ssh/authorized_keys && touch .pam_environment"
