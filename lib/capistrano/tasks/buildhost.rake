@@ -48,10 +48,9 @@ end
 desc "Prepare the build path on the build host for building a release"
 task "buildhost:prepare_build_path" => ["buildhost:clean:keepdeps", "buildhost:check_rev_available"] do
   on Onartsipac.build_host do |host|
-    within Onartsipac::Buildhost.build_path do
-      rev= fetch(:rev)
-      execute :sh, "-c", "git -C #{repo_path} archive #{rev} | tar xf -".shellescape
-    end
+    rev= fetch(:rev)
+
+    execute :sh, "-c", "git -C #{repo_path} archive #{rev} | tar xfC - #{Onartsipac::Buildhost.build_path}".shellescape
   end
 end
 
