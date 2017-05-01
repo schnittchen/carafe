@@ -1,56 +1,136 @@
 # Onartsipac
 
-**TODO: Add description**
+This is a tool for deploying Elixir applications, built upon [capistrano](http://capistranorb.com/).
+
+Onartsipac requires git for hosting the source repository. It depends on
+[Edeliver](https://github.com/boldpoker/edeliver) for a few parts that are not handled in
+Onartsipac yet. Release building requires [Distillery](https://github.com/bitwalker/distillery).
+
+Currently, only full releases, not upgrades, are supported, and archives are
+kept locally.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `onartsipac` to your list of dependencies in `mix.exs`:
+### Prerequisites, Ruby side
 
-```elixir
-def deps do
-  [{:onartsipac, "~> 0.1.0"}]
+You need ruby >= 2.0 installed in your development environment. The recommended way of installing dependencies on the ruby side is via bundler. Create a `Gemfile` at
+the project root containing:
+
+```
+source "https://rubygems.org"
+
+group :development do
+  gem "onartsipac"
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/onartsipac](https://hexdocs.pm/onartsipac).
+Then run `bundle install --path vendor/bundle`, followed by `bundle exec cap install`. This gives you
+these additional files:
 
-# Onartsipac
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/onartsipac`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'onartsipac'
+```
+o .bundle/config
++ Capfile
++ Gemfile
++ Gemfile.lock
+o vendor/bundle
++ config/deploy.rb
++ config/deploy/staging.rb
++ config/deploy/production.rb
 ```
 
-And then execute:
+Files behind `o` should be gitignored, the others checked in. Add the following line to the `Capfile`:
 
-    $ bundle
+```
+require "onartsipac"
+```
 
-Or install it yourself as:
+### Prerequisites, Elixir side
 
-    $ gem install onartsipac
+Add these deps to your `mix.exs`:
+
+```
+  defp deps do
+    [
+      {:edeliver, "~> 1.4.2"},
+      {:distillery, "~> 0.9"},
+      {:onartsipac, "0.2.0"}
+    ]
+  end
+```
+
+and run `mix deps.get`. Add `:edeliver` to your `:extra_applications` AS LAST:
+
+```
+  def application do
+    [extra_applications: [:logger, :edeliver]]
+  end
+```
+
+## Configuration
+
+First, configure your application for [distillery](https://github.com/bitwalker/distillery/).
+
+The [Capistrano documentation on configuration](http://capistranorb.com/documentation/getting-started/configuration/)
+gives you all the technical details on configuration in general. Note that Onartsipac does not use most of the
+variables listed there. Below you find a short introduction that gets you started.
+
+General configuration goes into `config/deploy.rb`. Capistrano has the concept of "stages", and stage specific
+configuration goes into separate files. For the `production` stage this would be `config/deploy/production.rb`.
+Stage specific configuration has precedence over general one.
+
+To configure the deployment process, we mostly set variables and declare servers, as in this example snippet:
+
+```
+set :application, "my_app"
+set :repo_url, "https://github.com/...."
+
+set :repo_path, "dummy1_repo"
+set :build_path, "build_path"
+server "buildhost1", user: "user", roles: ["build"]
+```
+
+Note we are declaring a host (and how to connect to via ssh) to be a build host by giving it the "build" role.
+There obviously must be only one buildhost. In `config/deploy/production.rb`, we might write
+
+```
+server "main", user: "user", roles: ["app"]
+```
+
+to declare a server as a node to deploy our app to.
+Documentation on the `server`
+options can be found [here](http://capistranorb.com/documentation/advanced-features/properties/).
+
+Here are the config variables honored by onartsipac:
+
+|Varible|Used for/as...|
+|---|---|
+|`:branch`| git branch to build the release from, or :current for current branch|
+|`:repo_url`| cloning the repo on the build host|
+|`:repo_path`| path of repository cache on build host|
+|`:mix_env`| MIX_ENV environment when running `release` mix task from distillery|
+|`:application`| name of the OTP application|
+|`:distillery_environment`| name of the distillery environment, defaulting to the value of :mix_env|
+|`:build_path`| path to build release on build host|
+|`:app_path`| path on application server where releases are unpacked and operated|
 
 ## Usage
 
-TODO: Write usage instructions here
+Currently, only deploying releases is supported. Every deploy scenario is a bit different, so
+you need to tell how a deploy is to be done. In `deploy.rb`, add the following line:
 
-## Development
+```
+task "deploy" => [
+  "buildhost:generate_release",
+  "buildhost:archive:download",
+  "node:archive:upload_and_unpack",
+  "node:full_restart"
+]
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+You should now be able to perform a production deploy with the command `bundle exec cap production deploy`.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## Development & Contributing
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/onartsipac.
+Coming soon.
 
 
