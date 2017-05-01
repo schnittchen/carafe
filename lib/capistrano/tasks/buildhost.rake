@@ -98,8 +98,7 @@ end
 desc "Generate release on the build host"
 task "buildhost:generate_release" => [
   "buildhost:prepare_build_path",
-  "buildhost:mix:deps.get",
-  "buildhost:mix:compile",
+  "buildhost:compile",
   "buildhost:mix:release"
 ]
 
