@@ -5,7 +5,7 @@ defmodule SimpleAppTest do
   alias DummyAppCase.Dummy
 
   test "updating the repo cache", %{dummy: dummy} do
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:repo:update})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:repo:update})
     |> Enamel.run!
@@ -16,7 +16,7 @@ defmodule SimpleAppTest do
     |> Enamel.command([:touch, dummy.build_path])
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean})
     |> Enamel.run!
@@ -30,7 +30,7 @@ defmodule SimpleAppTest do
     |> Enamel.command([~w{mkdir -p}, "#{dummy.build_path}/deps/foo"])
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean:keepdeps})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:clean:keepdeps})
     |> Enamel.run!
@@ -40,7 +40,7 @@ defmodule SimpleAppTest do
   end
 
   test "preparing the build path and compiling", %{dummy: dummy} do
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:compile})
     |> Enamel.run!
@@ -54,7 +54,7 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:compile})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
@@ -71,7 +71,7 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:archive:download})
     |> Enamel.run!
 
@@ -86,7 +86,7 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:archive:download node:archive:upload_and_unpack})
     |> Enamel.run!
 
@@ -102,7 +102,7 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:archive:download node:archive:upload_and_unpack})
     |> Enamel.run!
 
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
     |> Enamel.command(~w{bundle exec cap --trace production node:start})
     |> Enamel.command(~w{bundle exec cap --trace production node:start})
@@ -116,14 +116,14 @@ defmodule SimpleAppTest do
   end
 
   test "full deploy of a release", %{dummy: dummy} do
-    Enamel.new(on_failure: &flunk_for_reason/1, dir: dummy.capistrano_wd)
+    Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:generate_release buildhost:archive:download node:archive:upload_and_unpack node:full_restart})
     |> Enamel.command(~w{bundle exec cap --trace production node:ping})
     |> Enamel.run!
   end
 
-  def flunk_for_reason(reason) do
-    flunk "Failed with reason: #{reason}"
+  def flunk_for_reason(reason, command) do
+    flunk "Command #{command} failed with reason: #{reason}"
   end
 end
