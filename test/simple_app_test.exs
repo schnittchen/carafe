@@ -1,4 +1,4 @@
-defmodule OnartsipacTest do
+defmodule SimpleAppTest do
   @dummy_name "dummy1"
   use DummyAppCase, async: false
 
