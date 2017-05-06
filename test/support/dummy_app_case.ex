@@ -16,7 +16,7 @@ defmodule DummyAppCase do
 
     def new(name) do
       build_path = "/home/user/build_path"
-      app_path = "/home/user/app_path"
+      app_path = "/home/user/#{name}_app_path"
 
       %__MODULE__{
         name: name,
