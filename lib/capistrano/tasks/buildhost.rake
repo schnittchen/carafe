@@ -106,10 +106,11 @@ task "buildhost:gather-vsn" do
   on Onartsipac.build_host do |host|
     within Onartsipac::Buildhost.build_path do
       with Onartsipac::Buildhost.mix_env_with_arg do
+        # Pull the version out of rel/config.exs
         arg =
-          "Mix.Project.config[:version] |> IO.puts".shellescape # why, o-why?
+          %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{Onartsipac.distillery_release}].version}.shellescape
 
-        vsn = capture(:mix, "run", "-e", arg).chomp
+        vsn = capture(:mix, "run", "--no-start", "-e", arg).chomp
         raise ArgumentError if vsn.empty?
 
         set :vsn, vsn
