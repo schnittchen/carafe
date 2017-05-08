@@ -11,7 +11,8 @@ defmodule DummyAppCase do
       :capistrano_wd, # working dir when executing bundler and capistrano
 
       :build_path, # like in the dummy's deploy config, but absolute
-      :app_path # like in the dummy's deploy config, but absolute
+      :app_path, # like in the dummy's deploy config, but absolute
+      :distillery_env
     ]
 
     def new(name) do
@@ -22,7 +23,9 @@ defmodule DummyAppCase do
         name: name,
         version: "0.1.0",
         build_path: build_path,
-        app_path: app_path
+        app_path: app_path,
+
+        distillery_env: "prod" # fixed
       }
     end
 

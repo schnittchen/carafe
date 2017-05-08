@@ -123,6 +123,7 @@ task "buildhost:archive_path" => "buildhost:gather-vsn" do
 
   archive_path =
     Onartsipac::Buildhost.build_path.join(
+      "_build", Onartsipac.distillery_environment,
       "rel", Onartsipac.distillery_release,
       "releases", vsn, "#{Onartsipac.distillery_release}.tar.gz")
 

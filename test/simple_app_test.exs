@@ -56,10 +56,15 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
-    distillery_env = dummy.name # TODO: make this configurable
-    assert File.exists?(
-      [dummy.build_path,
-       "rel/#{distillery_env}/releases/#{dummy.version}/#{distillery_env}.tar.gz"] |> Path.join)
+    release_name = dummy.name # TODO: make this configurable
+
+    artifact_path = [
+      dummy.build_path,
+      "_build/#{dummy.distillery_env}",
+      "rel/#{release_name}/releases/#{dummy.version}/#{release_name}.tar.gz"
+    ] |> Path.join
+
+    assert File.exists?(artifact_path)
   end
 
   test "downloading a release archive", %{dummy: dummy} do
