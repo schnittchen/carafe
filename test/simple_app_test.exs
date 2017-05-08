@@ -2,8 +2,6 @@ defmodule SimpleAppTest do
   @dummy_name "dummy1"
   use DummyAppCase, async: false
 
-  alias DummyAppCase.Dummy
-
   test "updating the repo cache", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:repo:update})
