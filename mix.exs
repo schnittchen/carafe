@@ -32,7 +32,7 @@ defmodule Onartsipac.Mixfile do
 
   defp deps do
     [
-      {:distillery, "~> 0.9"},
+      {:distillery, "~> 1.3.5"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:porcelain, "~> 2.0", only: [:dev, :test]}
     ]
