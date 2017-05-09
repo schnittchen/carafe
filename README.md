@@ -113,6 +113,10 @@ Here are the config variables honored by onartsipac:
 |`:build_path`| path to build release on build host|
 |`:app_path`| path on application server where releases are unpacked and operated|
 
+### Umbrella project deployments
+
+A demonstration for an umbrella project is in the `dummies/dummy2` test dummy project.
+
 ## Usage
 
 Currently, only deploying releases is supported. Every deploy scenario is a bit different, so
