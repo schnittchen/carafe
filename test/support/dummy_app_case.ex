@@ -6,6 +6,9 @@ defmodule DummyAppCase do
       :name,
       :version,
 
+      :hex_package_path, # where the dummy points to us as a mix dep
+      :gem_path, # where the dummy points to us as a gem
+
       :onartsipac_path, # where a copy of this entire repo is placed for this dummy app
       :remote, # git remote / dummy repository, used by build steps
       :capistrano_wd, # working dir when executing bundler and capistrano
@@ -45,7 +48,7 @@ defmodule DummyAppCase do
       File.cp_r! ".", onartsipac_path
       File.rm_rf! Path.join(onartsipac_path, ".git")
 
-      %{ dummy | onartsipac_path: onartsipac_path }
+      %{ dummy | onartsipac_path: onartsipac_path, hex_package_path: onartsipac_path, gem_path: onartsipac_path }
     end
 
     def prepare_working_directory(%__MODULE__{name: name, onartsipac_path: onartsipac_path} = dummy) when is_binary(onartsipac_path) do
