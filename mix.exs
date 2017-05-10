@@ -19,7 +19,7 @@ defmodule Onartsipac.Mixfile do
     [maintainers: ["Thomas Stratmann"],
      licenses: ["MIT"],
      links: %{},
-     files: ~w(mix.exs README.md lib)]
+     files: ~w(mix.exs README.md lib/**/*.ex)]
   end
 
   # Configuration for the OTP application
