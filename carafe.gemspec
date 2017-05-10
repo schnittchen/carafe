@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'onartsipac/version'
+require 'carafe/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "onartsipac"
-  spec.version       = Onartsipac::VERSION
+  spec.name          = "carafe"
+  spec.version       = Carafe::VERSION
   spec.authors       = ["Thomas Stratmann"]
   spec.email         = ["thomas.stratmann@9elements.com"]
 
@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   # TODO include LICENSE
   spec.files         = Dir.glob("{bin,lib}/**/*.rb") +
                        Dir.glob("{bin,lib}/**/*.rake") +
-                       %w(README.md onartsipac.gemspec)
+                       %w(README.md carafe.gemspec)
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]

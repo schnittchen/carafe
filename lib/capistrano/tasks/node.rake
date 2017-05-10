@@ -6,23 +6,23 @@ task "node:archive:upload_and_unpack" => "local:archive_path" do
 end
 
 task "node:archive:upload", [:archive_path] => "local:archive_path" do |t, args|
-  on Onartsipac::Node.hosts do |host|
-    execute :mkdir, "-p", Onartsipac::Node.app_path
-    upload! args[:archive_path], Onartsipac::Node.app_path.join("archive.tar.gz")
+  on Carafe::Node.hosts do |host|
+    execute :mkdir, "-p", Carafe::Node.app_path
+    upload! args[:archive_path], Carafe::Node.app_path.join("archive.tar.gz")
   end
 end
 
 task "node:archive:unpack"  do
-  on Onartsipac::Node.hosts do |host|
-    within Onartsipac::Node.app_path do
+  on Carafe::Node.hosts do |host|
+    within Carafe::Node.app_path do
       execute :tar, "-xzvf", "archive.tar.gz"
     end
   end
 end
 
 #task "node:archive:unlink"  do
-#  on Onartsipac::Node.hosts do |host|
-#    within Onartsipac::Node.app_path do
+#  on Carafe::Node.hosts do |host|
+#    within Carafe::Node.app_path do
 #      execute :rm, archive_path
 #    end
 #  end
@@ -33,9 +33,9 @@ desc "Pings the node on each server, fails if one is not responding"
 task "node:ping" do
   # TODO in case of failure, we should collect all failing nodes
   # and report eventually.
-  script = Onartsipac.distillery_release
-  on Onartsipac::Node.hosts do |host|
-    within Onartsipac::Node.app_path do
+  script = Carafe.distillery_release
+  on Carafe::Node.hosts do |host|
+    within Carafe::Node.app_path do
       execute "bin/#{script}", "ping"
       info "Host #{host}: pong"
     end
@@ -44,9 +44,9 @@ end
 
 desc "Starts all nodes. Has no effect on servers where a node is already running"
 task "node:start" do
-  script = Onartsipac.distillery_release
-  on Onartsipac::Node.hosts do |host|
-    within Onartsipac::Node.app_path do
+  script = Carafe.distillery_release
+  on Carafe::Node.hosts do |host|
+    within Carafe::Node.app_path do
       execute "bin/#{script}", "start"
     end
   end
@@ -55,18 +55,18 @@ end
 desc "Stops all nodes."
 task "node:stop" do
   # FIXME we should attempt to stop all nodes before potentially failing
-  script = Onartsipac.distillery_release
-  on Onartsipac::Node.hosts do |host|
-    within Onartsipac::Node.app_path do
+  script = Carafe.distillery_release
+  on Carafe::Node.hosts do |host|
+    within Carafe::Node.app_path do
       execute "bin/#{script}", "stop"
     end
   end
 end
 
 task "node:stop-if-running" do
-  script = Onartsipac.distillery_release
-  on Onartsipac::Node.hosts do |host|
-    within Onartsipac::Node.app_path do
+  script = Carafe.distillery_release
+  on Carafe::Node.hosts do |host|
+    within Carafe::Node.app_path do
       if test("bin/#{script}", "ping")
         execute "bin/#{script}", "stop"
       end
@@ -76,12 +76,12 @@ end
 
 desc "Restarts the node, making sure a new version (including ERTS) is booted."
 task "node:full_restart" => ["node:stop-if-running", "node:start"] do
-  script = Onartsipac.distillery_release
-  app = Onartsipac::Node.app_name
+  script = Carafe.distillery_release
+  app = Carafe::Node.app_name
 
   # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
-  on Onartsipac::Node.hosts do |host|
-    within Onartsipac::Node.app_path do
+  on Carafe::Node.hosts do |host|
+    within Carafe::Node.app_path do
       execute <<-EOS
         for i in {1..10}; do bin/#{script} ping && break || true; sleep 1; done
       EOS
@@ -95,8 +95,8 @@ end
 
 desc "Attach to a running node, for introspection"
 task "node:attach" do
-  script = Onartsipac.distillery_release
-  on Onartsipac::Node.hosts do |host|
+  script = Carafe.distillery_release
+  on Carafe::Node.hosts do |host|
 
     puts "Attaching to node. When you are done, make sure to detach with Ctrl-D (otherwise node goes down)"
 
@@ -109,7 +109,7 @@ task "node:attach" do
         "-t",
         ("-p#{host.port}" if host.port),
         host.hostname,
-        "sh -c 'cd #{Onartsipac::Node.app_path} && bin/#{script} attach'"
+        "sh -c 'cd #{Carafe::Node.app_path} && bin/#{script} attach'"
       ].compact
 
     pid = spawn("ssh", *args)
