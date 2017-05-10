@@ -13,9 +13,10 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Saithe9v mib4ahVe AeF9aihi eor5zuSh}
   #spec.homepage      = "TODO: Put your gem's website or public repo URL here."
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
+  # TODO include LICENSE
+  spec.files         = Dir.glob("{bin,lib}/**/*.rb") +
+                       Dir.glob("{bin,lib}/**/*.rake") +
+                       %w(README.md onartsipac.gemspec)
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
