@@ -9,14 +9,13 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Thomas Stratmann"]
   spec.email         = ["thomas.stratmann@9elements.com"]
 
-  spec.summary       = %q{Saithe9v mib4ahVe AeF9aihi eor5zuSh}
-  spec.description   = %q{Saithe9v mib4ahVe AeF9aihi eor5zuSh}
-  #spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Deployment for Elixir applications, using capistrano}
+  spec.description   = %q{Deployment for Elixir applications, using capistrano}
+  spec.homepage      = "https://github.com/schnittchen/carafe"
 
-  # TODO include LICENSE
   spec.files         = Dir.glob("{bin,lib}/**/*.rb") +
                        Dir.glob("{bin,lib}/**/*.rake") +
-                       %w(README.md carafe.gemspec)
+                       %w(README.md LICENSE.md carafe.gemspec)
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
