@@ -48,14 +48,23 @@ defmodule DummyAppCase do
       File.cp_r! ".", onartsipac_path
       File.rm_rf! Path.join(onartsipac_path, ".git")
 
-      %{ dummy | onartsipac_path: onartsipac_path, hex_package_path: onartsipac_path, gem_path: onartsipac_path }
+      hex_package_path = [onartsipac_path, "hex_package"] |> Path.join
+      File.mkdir_p! hex_package_path
+
+      Enamel.new
+      |> Enamel.command(~w{mix hex.build}, dir: onartsipac_path)
+      |> Enamel.command(~w{tar xf ../onartsipac-0.1.0.tar contents.tar.gz}, dir: hex_package_path)
+      |> Enamel.command(~w{tar xf contents.tar.gz}, dir: hex_package_path)
+      |> Enamel.run!
+
+      %{ dummy | onartsipac_path: onartsipac_path, hex_package_path: hex_package_path, gem_path: onartsipac_path }
     end
 
-    def prepare_working_directory(%__MODULE__{name: name, onartsipac_path: onartsipac_path} = dummy) when is_binary(onartsipac_path) do
+    def prepare_working_directory(%__MODULE__{name: name, onartsipac_path: onartsipac_path, hex_package_path: hex_package_path} = dummy) when is_binary(onartsipac_path) do
       capistrano_wd = [onartsipac_path, "dummies", name] |> Path.join
 
       Enamel.command([:find, capistrano_wd, ~w<-name mix.exs -exec sed -i
-        s|__ONARTSIPAC_PATH__|#{onartsipac_path}| {} ;>])
+        s|__HEX_PACKAGE_PATH__|#{hex_package_path}| {} ;>])
       |> Enamel.command([:bundle], dir: capistrano_wd)
       |> Enamel.run!
 
