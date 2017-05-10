@@ -3,6 +3,6 @@ source "https://rubygems.org"
 
 group :development do
   gem "capistrano", "~> 3.8"
-  gem "onartsipac", path: "../../", require: :false
+  gem "onartsipac", path: "__GEM_PATH__", require: :false
 end
 
