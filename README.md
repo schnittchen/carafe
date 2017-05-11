@@ -44,10 +44,13 @@ o vendor/bundle
 + config/deploy/production.rb
 ```
 
-Files behind `o` should be gitignored, the others checked in. Add the following line to the `Capfile`:
-
+Files behind `o` should be gitignored, the others checked in. In your `Capdfile`, add the following line
 ```
 require "carafe"
+```
+below the line
+```
+require "capistrano/deploy"
 ```
 
 ### Prerequisites, Elixir side
