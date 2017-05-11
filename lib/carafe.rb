@@ -1,5 +1,9 @@
 require "carafe/version"
 
+# We advise users to build their own "deploy" top level task.
+# We need to clear capistrano's defaults before this can work (cf. README.md)
+Rake::Task["deploy"].clear
+
 load File.expand_path("../capistrano/tasks/local.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/node.rake", __FILE__)

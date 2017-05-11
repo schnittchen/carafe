@@ -82,8 +82,9 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
   # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
+      # Don't know why the additional `cd` is needed here.
       execute <<-EOS
-        for i in {1..10}; do bin/#{script} ping && break || true; sleep 1; done
+        cd #{Carafe::Node.app_path}; for i in {1..10}; do bin/#{script} ping && break || true; sleep 1; done
       EOS
 
       execute "bin/#{script}", <<-EOS
