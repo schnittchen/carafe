@@ -1,10 +1,10 @@
-# Onartsipac
+# Carafe
 
 This is a tool for deploying Elixir applications, built upon [capistrano](http://capistranorb.com/).
 
-Onartsipac requires git for hosting the source repository. It depends on
+Carafe requires git for hosting the source repository. It depends on
 [Edeliver](https://github.com/boldpoker/edeliver) for a few parts that are not handled in
-Onartsipac yet. Release building requires [Distillery](https://github.com/bitwalker/distillery).
+Carafe yet. Release building requires [Distillery](https://github.com/bitwalker/distillery).
 
 Currently, only full releases, not upgrades, are supported, and archives are
 kept locally.
@@ -20,7 +20,7 @@ the project root containing:
 source "https://rubygems.org"
 
 group :development do
-  gem "onartsipac"
+  gem "carafe"
 end
 ```
 
@@ -41,7 +41,7 @@ o vendor/bundle
 Files behind `o` should be gitignored, the others checked in. Add the following line to the `Capfile`:
 
 ```
-require "onartsipac"
+require "carafe"
 ```
 
 ### Prerequisites, Elixir side
@@ -53,7 +53,7 @@ Add these deps to your `mix.exs`:
     [
       {:edeliver, "~> 1.4.2"},
       {:distillery, "~> 0.9"},
-      {:onartsipac, "0.2.0"}
+      {:carafe, "0.2.0"}
     ]
   end
 ```
@@ -71,7 +71,7 @@ and run `mix deps.get`. Add `:edeliver` to your `:extra_applications` AS LAST:
 First, configure your application for [distillery](https://github.com/bitwalker/distillery/).
 
 The [Capistrano documentation on configuration](http://capistranorb.com/documentation/getting-started/configuration/)
-gives you all the technical details on configuration in general. Note that Onartsipac does not use most of the
+gives you all the technical details on configuration in general. Note that Carafe does not use most of the
 variables listed there. Below you find a short introduction that gets you started.
 
 General configuration goes into `config/deploy.rb`. Capistrano has the concept of "stages", and stage specific
@@ -100,7 +100,7 @@ to declare a server as a node to deploy our app to.
 Documentation on the `server`
 options can be found [here](http://capistranorb.com/documentation/advanced-features/properties/).
 
-Here are the config variables honored by onartsipac:
+Here are the config variables honored by carafe:
 
 |Varible|Used for/as...|
 |---|---|

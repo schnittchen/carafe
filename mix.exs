@@ -1,8 +1,8 @@
-defmodule Onartsipac.Mixfile do
+defmodule Carafe.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :onartsipac,
+    [app: :carafe,
      version: "0.1.0",
      elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
@@ -10,7 +10,7 @@ defmodule Onartsipac.Mixfile do
      start_permanent: Mix.env == :prod,
      deps: deps(),
 
-     description: "Saithe9v mib4ahVe AeF9aihi eor5zuSh",
+     description: "Deployment for Elixir applications, using capistrano",
      package: package()
     ]
   end
@@ -19,7 +19,7 @@ defmodule Onartsipac.Mixfile do
     [maintainers: ["Thomas Stratmann"],
      licenses: ["MIT"],
      links: %{},
-     files: ~w(mix.exs README.md lib/**/*.ex)]
+     files: ~w(mix.exs README.md LICENSE.md lib/**/*.ex)]
   end
 
   # Configuration for the OTP application

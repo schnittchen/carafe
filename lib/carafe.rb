@@ -1,10 +1,10 @@
-require "onartsipac/version"
+require "carafe/version"
 
 load File.expand_path("../capistrano/tasks/local.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
-module Onartsipac
+module Carafe
   def self.build_host
     hosts = roles(:build)
 
@@ -51,7 +51,7 @@ module Onartsipac
     end
 
     def self.mix_env_with_arg
-      { mix_env: Onartsipac.mix_env }
+      { mix_env: Carafe.mix_env }
     end
   end
 

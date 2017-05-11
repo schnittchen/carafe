@@ -57,7 +57,7 @@ defmodule DummyAppCase do
 
       Enamel.new
       |> Enamel.command(~w{mix hex.build})
-      |> Enamel.command(~w{tar xf #{from}/onartsipac-0.1.0.tar contents.tar.gz}, dir: hex_package_path)
+      |> Enamel.command(~w{tar xf #{from}/carafe-0.1.0.tar contents.tar.gz}, dir: hex_package_path)
       |> Enamel.command(~w{tar xf contents.tar.gz}, dir: hex_package_path)
       |> Enamel.run!
 
@@ -66,7 +66,7 @@ defmodule DummyAppCase do
 
       Enamel.new
       |> Enamel.command(~w{rake build})
-      |> Enamel.command(~w{tar xf #{from}/pkg/onartsipac-0.1.0.gem data.tar.gz}, dir: gem_path)
+      |> Enamel.command(~w{tar xf #{from}/pkg/carafe-0.1.0.gem data.tar.gz}, dir: gem_path)
       |> Enamel.command(~w{tar xf data.tar.gz}, dir: gem_path)
       |> Enamel.run!
 
@@ -104,8 +104,8 @@ defmodule DummyAppCase do
 
     def initialize_remote(%__MODULE__{remote: remote} = dummy) when is_binary(remote) do
       Enamel.command([~w{git -C}, remote, :init])
-      |> Enamel.command([~w{git -C}, remote, ~w{config user.name}, "onartsipac test user"])
-      |> Enamel.command([~w{git -C}, remote, ~w{config user.email onartsipac@example.com}])
+      |> Enamel.command([~w{git -C}, remote, ~w{config user.name}, "carafe test user"])
+      |> Enamel.command([~w{git -C}, remote, ~w{config user.email carafe@example.com}])
       |> Enamel.command([~w{git -C}, remote, ~w{add .}])
       |> Enamel.command([~w{git -C}, remote, ~w{commit -m bogus}])
       |> Enamel.run!

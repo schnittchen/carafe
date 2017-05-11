@@ -1,6 +1,6 @@
-defmodule Onartsipac do
+defmodule Carafe do
   @moduledoc """
-  Documentation for Onartsipac.
+  Documentation for Carafe.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Onartsipac do
 
   ## Examples
 
-      iex> Onartsipac.hello
+      iex> Carafe.hello
       :world
 
   """
