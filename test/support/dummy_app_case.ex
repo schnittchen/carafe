@@ -55,9 +55,11 @@ defmodule DummyAppCase do
 
       from = System.cwd |> Path.expand
 
+      gem_and_hex_version = Mix.Project.config |> Keyword.fetch!(:version)
+
       Enamel.new
       |> Enamel.command(~w{mix hex.build})
-      |> Enamel.command(~w{tar xf #{from}/carafe-0.1.0.tar contents.tar.gz}, dir: hex_package_path)
+      |> Enamel.command(~w{tar xf #{from}/carafe-#{gem_and_hex_version}.tar contents.tar.gz}, dir: hex_package_path)
       |> Enamel.command(~w{tar xf contents.tar.gz}, dir: hex_package_path)
       |> Enamel.run!
 
@@ -66,7 +68,7 @@ defmodule DummyAppCase do
 
       Enamel.new
       |> Enamel.command(~w{rake build})
-      |> Enamel.command(~w{tar xf #{from}/pkg/carafe-0.1.0.gem data.tar.gz}, dir: gem_path)
+      |> Enamel.command(~w{tar xf #{from}/pkg/carafe-#{gem_and_hex_version}.gem data.tar.gz}, dir: gem_path)
       |> Enamel.command(~w{tar xf data.tar.gz}, dir: gem_path)
       |> Enamel.run!
 
