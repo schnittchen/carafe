@@ -11,14 +11,15 @@ defmodule Carafe.Mixfile do
      deps: deps(),
 
      description: "Deployment for Elixir applications, using capistrano",
-     package: package()
+     package: package(),
+     docs: [main: "readme", extras: ["README.md"]]
     ]
   end
 
   defp package do
     [maintainers: ["Thomas Stratmann"],
      licenses: ["MIT"],
-     links: %{},
+     links: %{"Github": "https://github.com/schnittchen/carafe"},
      files: ~w(mix.exs README.md LICENSE.md lib/**/*.ex)]
   end
 
