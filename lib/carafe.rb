@@ -6,6 +6,10 @@ load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Carafe
+  module DSL
+    def build_host; Carafe.build_host; end
+  end
+
   def self.build_host
     hosts = roles(:build)
 
@@ -74,3 +78,5 @@ module Carafe
     end
   end
 end
+
+extend Carafe::DSL
