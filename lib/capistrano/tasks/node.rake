@@ -88,7 +88,7 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
       EOS
 
       execute "bin/#{script}", <<-EOS
-      rpcterms Elixir.Edeliver run_command '[monitor_startup_progress, \"#{app}\", verbose].' | grep -e 'Started\\|^ok'
+      rpcterms Elixir.Edeliver run_command '[monitor_startup_progress, \"#{app}\", verbose].' | tee /dev/fd/2 | grep -e 'Started\\|^ok'
       EOS
     end
   end
