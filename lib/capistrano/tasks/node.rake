@@ -6,14 +6,14 @@ task "node:archive:upload_and_unpack" => "local:archive_path" do
 end
 
 task "node:archive:upload", [:archive_path] => "local:archive_path" do |t, args|
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
     execute :mkdir, "-p", app_path
     upload! args[:archive_path], app_path.join("archive.tar.gz")
   end
 end
 
 task "node:archive:unpack"  do
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
     within app_path do
       execute :tar, "-xzvf", "archive.tar.gz"
     end
@@ -21,7 +21,7 @@ task "node:archive:unpack"  do
 end
 
 #task "node:archive:unlink"  do
-#  on Carafe::Node.hosts do |host|
+#  on app_hosts do |host|
 #    within app_path do
 #      execute :rm, archive_path
 #    end
@@ -34,7 +34,7 @@ task "node:ping" do
   # TODO in case of failure, we should collect all failing nodes
   # and report eventually.
   script = Carafe.distillery_release
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
     within app_path do
       execute "bin/#{script}", "ping"
       info "Host #{host}: pong"
@@ -45,7 +45,7 @@ end
 desc "Starts all nodes. Has no effect on servers where a node is already running"
 task "node:start" do
   script = Carafe.distillery_release
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
     within app_path do
       execute "bin/#{script}", "start"
     end
@@ -56,7 +56,7 @@ desc "Stops all nodes."
 task "node:stop" do
   # FIXME we should attempt to stop all nodes before potentially failing
   script = Carafe.distillery_release
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
     within app_path do
       execute "bin/#{script}", "stop"
     end
@@ -65,7 +65,7 @@ end
 
 task "node:stop-if-running" do
   script = Carafe.distillery_release
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
     within app_path do
       if test("bin/#{script}", "ping")
         execute "bin/#{script}", "stop"
@@ -80,7 +80,7 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
   app = Carafe::Node.app_name
 
   # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
     within app_path do
       # Don't know why the additional `cd` is needed here.
       execute <<-EOS
@@ -97,7 +97,7 @@ end
 desc "Attach to a running node, for introspection"
 task "node:attach" do
   script = Carafe.distillery_release
-  on Carafe::Node.hosts do |host|
+  on app_hosts do |host|
 
     puts "Attaching to node. When you are done, make sure to detach with Ctrl-D (otherwise node goes down)"
 
