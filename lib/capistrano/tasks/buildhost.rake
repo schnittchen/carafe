@@ -60,7 +60,7 @@ desc "Execute `mix deps.get` on the build host"
 task "buildhost:mix:deps.get" do
   on build_host do |host|
     within Carafe::Buildhost.build_path do
-      with Carafe::Buildhost.mix_env_with_arg do
+      with mix_env: mix_env do
         execute :mix, "local.hex", "--force"
         execute :mix, "local.rebar", "--force"
         execute :mix, "deps.get"
@@ -73,7 +73,7 @@ desc "Execute `mix compile` on the build host"
 task "buildhost:mix:compile" do
   on build_host do |host|
     within Carafe::Buildhost.build_path do
-      with Carafe::Buildhost.mix_env_with_arg do
+      with mix_env: mix_env do
         execute :mix, "compile"
       end
     end
@@ -90,7 +90,7 @@ desc "Execute `mix release` on the build host"
 task "buildhost:mix:release" do
   on build_host do |host|
     within Carafe::Buildhost.build_path do
-      with Carafe::Buildhost.mix_env_with_arg do
+      with mix_env: mix_env do
         execute :mix, "release", "--env=#{Carafe.distillery_environment}"
       end
     end
@@ -107,7 +107,7 @@ task "buildhost:generate_release" => [
 task "buildhost:gather-vsn" do
   on build_host do |host|
     within Carafe::Buildhost.build_path do
-      with Carafe::Buildhost.mix_env_with_arg do
+      with mix_env: mix_env do
         # Pull the version out of rel/config.exs
         arg =
           %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{Carafe.distillery_release}].version}.shellescape
