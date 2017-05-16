@@ -1,3 +1,14 @@
+## 0.1.2
+
+### Fixed
+
+* Documentation referred to wrong versions
+* Gem now depends on capistrano
+
+### Changed
+
+* better error messages
+
 ## 0.1.1
 
 ### Fixed
