@@ -8,6 +8,7 @@ load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 module Carafe
   module DSL
     def build_host; Carafe.build_host; end
+    def build_path; Buildhost.build_path; end
     def mix_env; Carafe.mix_env; end
   end
 

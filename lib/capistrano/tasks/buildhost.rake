@@ -21,15 +21,15 @@ end
 desc "Deletes the build path on the build host"
 task "buildhost:clean" do
   on build_host do |host|
-    execute :rm, "-rf", Carafe::Buildhost.build_path
+    execute :rm, "-rf", build_path
   end
 end
 
 desc "Deletes everything in the build path on the build host, except deps/"
 task "buildhost:clean:keepdeps" do
   on build_host do |host|
-    execute :mkdir, "-p", Carafe::Buildhost.build_path
-    within Carafe::Buildhost.build_path do
+    execute :mkdir, "-p", build_path
+    within build_path do
       execute :find,  %w{\( -path './deps/*' -or -path ./deps \) -or -delete}
     end
   end
@@ -52,14 +52,14 @@ task "buildhost:prepare_build_path" => ["buildhost:clean:keepdeps", "buildhost:c
   on build_host do |host|
     rev= fetch(:rev)
 
-    execute :sh, "-c", "git -C #{repo_path} archive #{rev} | tar xfC - #{Carafe::Buildhost.build_path}".shellescape
+    execute :sh, "-c", "git -C #{repo_path} archive #{rev} | tar xfC - #{build_path}".shellescape
   end
 end
 
 desc "Execute `mix deps.get` on the build host"
 task "buildhost:mix:deps.get" do
   on build_host do |host|
-    within Carafe::Buildhost.build_path do
+    within build_path do
       with mix_env: mix_env do
         execute :mix, "local.hex", "--force"
         execute :mix, "local.rebar", "--force"
@@ -72,7 +72,7 @@ end
 desc "Execute `mix compile` on the build host"
 task "buildhost:mix:compile" do
   on build_host do |host|
-    within Carafe::Buildhost.build_path do
+    within build_path do
       with mix_env: mix_env do
         execute :mix, "compile"
       end
@@ -89,7 +89,7 @@ task "buildhost:compile" => [
 desc "Execute `mix release` on the build host"
 task "buildhost:mix:release" do
   on build_host do |host|
-    within Carafe::Buildhost.build_path do
+    within build_path do
       with mix_env: mix_env do
         execute :mix, "release", "--env=#{Carafe.distillery_environment}"
       end
@@ -106,7 +106,7 @@ task "buildhost:generate_release" => [
 
 task "buildhost:gather-vsn" do
   on build_host do |host|
-    within Carafe::Buildhost.build_path do
+    within build_path do
       with mix_env: mix_env do
         # Pull the version out of rel/config.exs
         arg =
@@ -125,7 +125,7 @@ task "buildhost:archive_path" => "buildhost:gather-vsn" do
   vsn = fetch(:vsn)
 
   archive_path =
-    Carafe::Buildhost.build_path.join(
+    build_path.join(
       "_build", Carafe.distillery_environment,
       "rel", Carafe.distillery_release,
       "releases", vsn, "#{Carafe.distillery_release}.tar.gz")
