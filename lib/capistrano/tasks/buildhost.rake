@@ -40,7 +40,9 @@ task "buildhost:check_rev_available" => ["local:gather-rev", "buildhost:repo:upd
   on Carafe.build_host do |host|
     within repo_path do
       rev = fetch(:rev)
-      execute :git, "cat-file -e #{rev}^{commit}"
+      unless test(:git, "cat-file -e #{rev}^{commit}")
+        raise "Could not find revision #{rev} in repo mirror on buildhost. Did you push your commits?"
+      end
     end
   end
 end
