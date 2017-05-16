@@ -7,14 +7,14 @@ end
 
 task "node:archive:upload", [:archive_path] => "local:archive_path" do |t, args|
   on Carafe::Node.hosts do |host|
-    execute :mkdir, "-p", Carafe::Node.app_path
-    upload! args[:archive_path], Carafe::Node.app_path.join("archive.tar.gz")
+    execute :mkdir, "-p", app_path
+    upload! args[:archive_path], app_path.join("archive.tar.gz")
   end
 end
 
 task "node:archive:unpack"  do
   on Carafe::Node.hosts do |host|
-    within Carafe::Node.app_path do
+    within app_path do
       execute :tar, "-xzvf", "archive.tar.gz"
     end
   end
@@ -22,7 +22,7 @@ end
 
 #task "node:archive:unlink"  do
 #  on Carafe::Node.hosts do |host|
-#    within Carafe::Node.app_path do
+#    within app_path do
 #      execute :rm, archive_path
 #    end
 #  end
@@ -35,7 +35,7 @@ task "node:ping" do
   # and report eventually.
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
-    within Carafe::Node.app_path do
+    within app_path do
       execute "bin/#{script}", "ping"
       info "Host #{host}: pong"
     end
@@ -46,7 +46,7 @@ desc "Starts all nodes. Has no effect on servers where a node is already running
 task "node:start" do
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
-    within Carafe::Node.app_path do
+    within app_path do
       execute "bin/#{script}", "start"
     end
   end
@@ -57,7 +57,7 @@ task "node:stop" do
   # FIXME we should attempt to stop all nodes before potentially failing
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
-    within Carafe::Node.app_path do
+    within app_path do
       execute "bin/#{script}", "stop"
     end
   end
@@ -66,7 +66,7 @@ end
 task "node:stop-if-running" do
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
-    within Carafe::Node.app_path do
+    within app_path do
       if test("bin/#{script}", "ping")
         execute "bin/#{script}", "stop"
       end
@@ -81,10 +81,10 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
 
   # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
   on Carafe::Node.hosts do |host|
-    within Carafe::Node.app_path do
+    within app_path do
       # Don't know why the additional `cd` is needed here.
       execute <<-EOS
-        cd #{Carafe::Node.app_path}; for i in {1..10}; do bin/#{script} ping && break || true; sleep 1; done
+        cd #{app_path}; for i in {1..10}; do bin/#{script} ping && break || true; sleep 1; done
       EOS
 
       execute "bin/#{script}", <<-EOS
@@ -110,7 +110,7 @@ task "node:attach" do
         "-t",
         ("-p#{host.port}" if host.port),
         host.hostname,
-        "sh -c 'cd #{Carafe::Node.app_path} && bin/#{script} attach'"
+        "sh -c 'cd #{app_path} && bin/#{script} attach'"
       ].compact
 
     pid = spawn("ssh", *args)

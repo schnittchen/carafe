@@ -10,6 +10,7 @@ module Carafe
     def build_host; Carafe.build_host; end
     def build_path; Buildhost.build_path; end
     def mix_env; Carafe.mix_env; end
+    def app_path; Node.app_path; end
   end
 
   def self.build_host
@@ -57,7 +58,7 @@ module Carafe
       Pathname(fetch(:build_path) { raise "no build_path configured" })
     end
 
-    def self.mix_env_with_arg
+    def self.mix_env_with_arg #OBSOLETE
       { mix_env: Carafe.mix_env }
     end
   end
