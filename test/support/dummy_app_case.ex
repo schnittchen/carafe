@@ -34,6 +34,8 @@ defmodule DummyAppCase do
 
     def kill_stray_processes(%__MODULE__{app_path: app_path} = dummy) do
       Enamel.new(as: "user", good_exits: [0, 1])
+      |> Enamel.command(~w{pgrep -l erl})
+      |> Enamel.command(~w{echo XXXXXXXX})
       |> Enamel.command([~w{pkill -f}, "^#{app_path |> Regex.escape}.*run_erl"])
       |> Enamel.run!
 
