@@ -85,7 +85,7 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
       ponged = false
-      10.times do
+      20.times do
         if test("bin/#{script} ping")
           ponged = true
         else
