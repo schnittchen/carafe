@@ -47,7 +47,7 @@ task "node:start" do
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
-      execute "bin/#{script}", "start"
+      p(capture "bin/#{script}", "start")
     end
   end
 end
