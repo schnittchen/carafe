@@ -28,16 +28,6 @@ module Carafe
     hosts.first
   end
 
-  def self.rev_param
-    branch = fetch(:branch) { raise "you need to set :branch to a branch name or :current" }
-
-    if branch == :current
-      "@"
-    else
-      branch
-    end
-  end
-
   def self.mix_env
     fetch(:mix_env) { raise "set :mix_env in stage config!" }.to_s
   end
