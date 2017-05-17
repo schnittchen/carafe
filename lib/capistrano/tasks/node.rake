@@ -48,6 +48,8 @@ task "node:start" do
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
       p(capture "bin/#{script}", "start")
+      execute :cat, "var/log/erlang.log.1"
+
     end
   end
 end
