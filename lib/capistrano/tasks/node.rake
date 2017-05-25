@@ -15,7 +15,7 @@ end
 task "node:archive:unpack"  do
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
-      execute :tar, "-xzvf", "archive.tar.gz"
+      execute :tar, "-xzvf", "archive.tar.gz", verbosity: :debug
     end
   end
 end
