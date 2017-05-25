@@ -89,9 +89,12 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
     within Carafe::Node.app_path do
       ponged = false
       20.times do
-        if test("bin/#{script} ping")
+        if test("bin/#{script}", "ping")
           ponged = true
         else
+          system "pgrep beam"
+         puts capture("bin/#{script}", "ping")
+          puts "sleeping"
           sleep 1
         end unless ponged
       end
