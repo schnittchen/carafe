@@ -47,12 +47,12 @@ task "node:start" do
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
-      execute :sh, "-c", "ps -auxwww | grep erts".shellescape
+      execute :sh, "-c", "ps -auxwww | grep erts || echo no_erts_process".shellescape
       execute :cat, "var/log/erlang.log.1" rescue nil
       puts "DEBUG: starting"
       p(capture "bin/#{script}", "start")
-      execute :sh, "-c", "ps -auxwww | grep erts"
-      execute :cat, "var/log/erlang.log.1".shellescape
+      execute :sh, "-c", "ps -auxwww | grep erts || echo no_erts_process".shellescape
+      execute :cat, "var/log/erlang.log.1"
 
     end
   end
@@ -64,10 +64,10 @@ task "node:stop" do
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
-      execute :sh, "-c", "ps -auxwww | grep erts"
+      execute :sh, "-c", "ps -auxwww | grep erts || echo no_erts_process".shellescape
       puts "DEBUG: stopping"
       execute "bin/#{script}", "stop"
-      execute :sh, "-c", "ps -auxwww | grep erts"
+      execute :sh, "-c", "ps -auxwww | grep erts || echo no_erts_process".shellescape
     end
   end
 end
