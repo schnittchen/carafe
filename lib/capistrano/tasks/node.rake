@@ -47,7 +47,9 @@ task "node:start" do
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
+      execute :ps, "-auxwww"
       p(capture "bin/#{script}", "start")
+      execute :ps, "-auxwww"
       execute :cat, "var/log/erlang.log.1"
 
     end
