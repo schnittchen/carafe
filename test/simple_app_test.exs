@@ -113,6 +113,7 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production node:stop})
     |> Enamel.command(~w{bundle exec cap --trace production node:stop}, expect_fail: true)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
+    |> Enamel.command(~w{sleep 5})
     |> Enamel.command(~w{bundle exec cap --trace production node:full_restart})
     |> Enamel.command(~w{bundle exec cap --trace production node:full_restart})
     |> Enamel.run!
