@@ -48,6 +48,7 @@ task "node:start" do
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
       execute :ps, "-auxwww"
+      execute :cat, "var/log/erlang.log.1"
       p(capture "bin/#{script}", "start")
       execute :ps, "-auxwww"
       execute :cat, "var/log/erlang.log.1"
