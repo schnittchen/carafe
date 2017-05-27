@@ -104,6 +104,7 @@ defmodule SimpleAppTest do
       [dummy.app_path, "bin/#{dummy.distillery_release}"] |> Path.join)
   end
 
+  @tag :skip
   test "basic interaction with nodes", %{dummy: dummy} do
     Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
