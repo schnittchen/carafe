@@ -33,6 +33,7 @@ desc "Pings the node on each server, fails if one is not responding"
 task "node:ping" do
   # TODO in case of failure, we should collect all failing nodes
   # and report eventually.
+  sleep 1
   script = Carafe.distillery_release
   on Carafe::Node.hosts do |host|
     within Carafe::Node.app_path do
