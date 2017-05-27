@@ -115,7 +115,7 @@ defmodule SimpleAppTest do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
     |> Enamel.command(~w{bundle exec cap --trace production node:start})
-    |> Enamel.command(~w{bundle exec cap --trace production node:start})
+    #|> Enamel.command(~w{bundle exec cap --trace production node:start})
     |> Enamel.command(~w{bundle exec cap --trace production node:ping})
     |> Enamel.command(~w{bundle exec cap --trace production node:stop})
     |> Enamel.command(~w{bundle exec cap --trace production node:stop}, expect_fail: true)
