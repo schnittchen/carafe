@@ -2,6 +2,7 @@ defmodule SimpleAppTest do
   @dummy_name "dummy1"
   use DummyAppCase, async: false
 
+  @tag :skip
   test "updating the repo cache", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:repo:update})
@@ -9,6 +10,7 @@ defmodule SimpleAppTest do
     |> Enamel.run!
   end
 
+  @tag :skip
   test "cleaning the build path", %{dummy: dummy} do
     Enamel.new(as: "user")
     |> Enamel.command([:touch, dummy.build_path])
@@ -38,6 +40,7 @@ defmodule SimpleAppTest do
     assert !File.exists?([dummy.build_path, "foo"] |> Path.join)
   end
 
+  @tag :skip
   test "preparing the build path and compiling", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
@@ -47,6 +50,7 @@ defmodule SimpleAppTest do
     assert File.exists?([dummy.build_path, "_build/prod/lib/dummy1"] |> Path.join)
   end
 
+  @tag :skip
   test "executing mix release", %{dummy: dummy} do
     Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
@@ -84,6 +88,7 @@ defmodule SimpleAppTest do
       [dummy.capistrano_wd, "archive.tar.gz"] |> Path.join)
   end
 
+  @tag :skip
   test "uploading and unpacking a release archive", %{dummy: dummy} do
     Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
@@ -120,6 +125,7 @@ defmodule SimpleAppTest do
     |> Enamel.run!
   end
 
+  @tag :skip
   test "full deploy of a release", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
