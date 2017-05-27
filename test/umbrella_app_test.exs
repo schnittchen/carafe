@@ -6,6 +6,7 @@ defmodule UmbrellaAppTest do
   # and writes all started applications into this file.
   @applications_file "/tmp/started_applications"
 
+  @tag :skip
   test "full deploy of a release", %{dummy: dummy} do
     File.rm_rf @applications_file
 

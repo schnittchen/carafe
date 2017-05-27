@@ -22,6 +22,7 @@ defmodule SimpleAppTest do
     assert !File.exists?(dummy.build_path)
   end
 
+  @tag :skip
   test "cleaning the build path partially", %{dummy: dummy} do
     Enamel.new(as: "user")
     |> Enamel.command([~w{mkdir -p}, "#{dummy.build_path}/foo"])
@@ -67,6 +68,7 @@ defmodule SimpleAppTest do
     assert File.exists?(artifact_path)
   end
 
+  @tag :skip
   test "downloading a release archive", %{dummy: dummy} do
     Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
