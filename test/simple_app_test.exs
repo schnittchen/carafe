@@ -122,11 +122,14 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
     |> Enamel.command(~w{echo sleeping})
     |> Enamel.command(~w{sleep 5})
-    |> Enamel.command(~w{bundle exec cap --trace production node:full_restart})
-    |> Enamel.command(~w{bundle exec cap --trace production node:full_restart})
+    |> Enamel.command(~w{bundle exec cap --trace production node:full_restart}, expect_fail: true) #should not fail, but does
+    |> Enamel.command(~w{cat /home/user/dummy1_app_path/var/log/erlang.log.1})
+    |> Enamel.command(~w{false})
+    #|> Enamel.command(~w{bundle exec cap --trace production node:full_restart})
     |> Enamel.run!
   end
 
+  @tag :skip
   test "full deploy of a release", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{echo YYYYYYYYYYY})
