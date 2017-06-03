@@ -129,7 +129,8 @@ defmodule SimpleAppTest do
   test "full deploy of a release", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
-    |> Enamel.command(~w{bundle exec cap --trace production buildhost:generate_release buildhost:archive:download node:archive:upload_and_unpack node:full_restart})
+    |> Enamel.command(~w{bundle exec cap --trace production buildhost:generate_release buildhost:archive:download node:archive:upload_and_unpack})
+    |> Enamel.command(~w{bundle exec cap --trace production node:full_restart})
     |> Enamel.command(~w{bundle exec cap --trace production node:ping})
     |> Enamel.run!
   end
