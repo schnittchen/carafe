@@ -19,7 +19,7 @@ module Carafe
     end
 
     def build_path
-      Pathname(fetch(:build_path) { raise "no build_path configured" })
+      Pathname(fetch(:build_path) { raise "no :build_path configured" })
     end
 
     def mix_env
@@ -43,7 +43,7 @@ module Carafe
     end
 
     def distillery_release
-      fetch(:application) { raise }
+      fetch(:application) { raise "no :application configured" }
     end
   end
 
@@ -53,7 +53,7 @@ module Carafe
     end
 
     def self.build_path
-      Pathname(fetch(:build_path) { raise "no build_path configured" })
+      Pathname(fetch(:build_path) { raise "no :build_path configured" })
     end
   end
 
