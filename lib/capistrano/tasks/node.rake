@@ -33,7 +33,7 @@ desc "Pings the node on each server, fails if one is not responding"
 task "node:ping" do
   # TODO in case of failure, we should collect all failing nodes
   # and report eventually.
-  script = Carafe.distillery_release
+  script = distillery_release
   on app_hosts do |host|
     within app_path do
       execute "bin/#{script}", "ping"
@@ -44,7 +44,7 @@ end
 
 desc "Starts all nodes. Has no effect on servers where a node is already running"
 task "node:start" do
-  script = Carafe.distillery_release
+  script = distillery_release
   on app_hosts do |host|
     within app_path do
       execute "bin/#{script}", "start"
@@ -55,7 +55,7 @@ end
 desc "Stops all nodes."
 task "node:stop" do
   # FIXME we should attempt to stop all nodes before potentially failing
-  script = Carafe.distillery_release
+  script = distillery_release
   on app_hosts do |host|
     within app_path do
       execute "bin/#{script}", "stop"
@@ -64,7 +64,7 @@ task "node:stop" do
 end
 
 task "node:stop-if-running" do
-  script = Carafe.distillery_release
+  script = distillery_release
   on app_hosts do |host|
     within app_path do
       if test("bin/#{script}", "ping")
@@ -76,8 +76,8 @@ end
 
 desc "Restarts the node, making sure a new version (including ERTS) is booted."
 task "node:full_restart" => ["node:stop-if-running", "node:start"] do
-  script = Carafe.distillery_release
-  app = Carafe::Node.app_name
+  script = distillery_release
+  app = fetch(:application) { raise ":application has not been set" }
 
   # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
   on app_hosts do |host|
@@ -96,7 +96,7 @@ end
 
 desc "Attach to a running node, for introspection"
 task "node:attach" do
-  script = Carafe.distillery_release
+  script = distillery_release
   on app_hosts do |host|
 
     puts "Attaching to node. When you are done, make sure to detach with Ctrl-D (otherwise node goes down)"

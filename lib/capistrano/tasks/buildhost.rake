@@ -1,18 +1,22 @@
 task "buildhost:git:check_reachable" do
+  git = Capistrano::SCM::Git.new
+
   on build_host do |host|
-    Carafe::Buildhost.git.check_repo_is_reachable
+    git.check_repo_is_reachable
   end
 end
 
 desc "Creates or updates the repo cache on the build host"
 task "buildhost:repo:update" => "buildhost:git:check_reachable" do
+  git = Capistrano::SCM::Git.new
+
   on build_host do |host|
-    unless Carafe::Buildhost.git.repo_mirror_exists?
-      Carafe::Buildhost.git.clone_repo
+    unless git.repo_mirror_exists?
+      git.clone_repo
     else
       # .clone_repo respects the repo_path, .update_mirror not.
       within repo_path do
-        Carafe::Buildhost.git.update_mirror
+        git.update_mirror
       end
     end
   end
@@ -91,7 +95,7 @@ task "buildhost:mix:release" do
   on build_host do |host|
     within build_path do
       with mix_env: mix_env do
-        execute :mix, "release", "--env=#{Carafe.distillery_environment}"
+        execute :mix, "release", "--env=#{distillery_environment}"
       end
     end
   end
@@ -110,7 +114,7 @@ task "buildhost:gather-vsn" do
       with mix_env: mix_env do
         # Pull the version out of rel/config.exs
         arg =
-          %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{Carafe.distillery_release}].version}.shellescape
+          %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{distillery_release}].version}.shellescape
 
         vsn = capture(:mix, "run", "--no-start", "-e", arg).chomp
         raise ArgumentError if vsn.empty?
@@ -126,9 +130,9 @@ task "buildhost:archive_path" => "buildhost:gather-vsn" do
 
   archive_path =
     build_path.join(
-      "_build", Carafe.distillery_environment,
-      "rel", Carafe.distillery_release,
-      "releases", vsn, "#{Carafe.distillery_release}.tar.gz")
+      "_build", distillery_environment,
+      "rel", distillery_release,
+      "releases", vsn, "#{distillery_release}.tar.gz")
 
   set :buildhost_archive_path, archive_path
 end
