@@ -46,12 +46,6 @@ module Carafe
       fetch(:application) { raise "no :application configured" }
     end
   end
-
-  module Node
-    def self.app_name
-      fetch(:application) { raise }
-    end
-  end
 end
 
 extend Carafe::DSL

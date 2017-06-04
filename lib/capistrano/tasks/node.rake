@@ -77,7 +77,7 @@ end
 desc "Restarts the node, making sure a new version (including ERTS) is booted."
 task "node:full_restart" => ["node:stop-if-running", "node:start"] do
   script = distillery_release
-  app = Carafe::Node.app_name
+  app = fetch(:application) { raise ":application has not been set" }
 
   # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
   on app_hosts do |host|
