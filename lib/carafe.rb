@@ -6,6 +6,14 @@ load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Carafe
+  module DSL
+    def build_host; Carafe.build_host; end
+    def build_path; Buildhost.build_path; end
+    def mix_env; Carafe.mix_env; end
+    def app_path; Node.app_path; end
+    def app_hosts; Node.hosts; end
+  end
+
   def self.build_host
     hosts = roles(:build)
 
@@ -18,16 +26,6 @@ module Carafe
     end
 
     hosts.first
-  end
-
-  def self.rev_param
-    branch = fetch(:branch) { raise "you need to set :branch to a branch name or :current" }
-
-    if branch == :current
-      "@"
-    else
-      branch
-    end
   end
 
   def self.mix_env
@@ -50,10 +48,6 @@ module Carafe
     def self.build_path
       Pathname(fetch(:build_path) { raise "no build_path configured" })
     end
-
-    def self.mix_env_with_arg
-      { mix_env: Carafe.mix_env }
-    end
   end
 
   module Node
@@ -74,3 +68,6 @@ module Carafe
     end
   end
 end
+
+extend Carafe::DSL
+SSHKit::Backend::Abstract.include Carafe::DSL

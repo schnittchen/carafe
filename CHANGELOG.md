@@ -7,6 +7,7 @@
 
 ### Changed
 
+* partial overhaul of internal DSL
 * better error messages
 
 ## 0.1.1

@@ -1,7 +1,16 @@
 task "local:gather-rev" do
+  branch = fetch(:branch) { raise "you need to set :branch to a branch name or :current" }
+
+  rev_param =
+    if branch == :current
+      "@"
+    else
+      branch
+    end
+
   rev =
     run_locally do
-      capture :git, "rev-parse", Carafe.rev_param
+      capture :git, "rev-parse", rev_param
     end
 
   set :rev, rev
