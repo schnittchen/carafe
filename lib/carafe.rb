@@ -7,8 +7,6 @@ load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Carafe
   module DSL
-    module_function
-
     def build_host
       hosts = roles(:build)
 
