@@ -7,29 +7,36 @@ load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Carafe
   module DSL
-    def build_host; Carafe.build_host; end
-    def build_path; Buildhost.build_path; end
-    def mix_env; Carafe.mix_env; end
-    def app_path; Node.app_path; end
-    def app_hosts; Node.hosts; end
-  end
+    module_function
 
-  def self.build_host
-    hosts = roles(:build)
+    def build_host
+      hosts = roles(:build)
 
-    if hosts.none?
-      raise "No build host available."
+      raise "No build host available." if hosts.none?
+      raise "There can only be one build host." if hosts.length > 1
+
+      hosts.first
     end
 
-    if hosts.length > 1
-      raise "There can only be one build host."
+    def build_path
+      Pathname(fetch(:build_path) { raise "no build_path configured" })
     end
 
-    hosts.first
-  end
+    def mix_env
+      fetch(:mix_env) { raise "set :mix_env in stage config!" }.to_s
+    end
 
-  def self.mix_env
-    fetch(:mix_env) { raise "set :mix_env in stage config!" }.to_s
+    def app_path
+      Pathname(fetch(:app_path) { raise "set :app_path node path where the release is unpacked an run" })
+    end
+
+    def app_hosts
+      hosts = roles(:app)
+
+      raise "No hosts have been configured with role 'app'" if hosts.none?
+
+      hosts
+    end
   end
 
   def self.distillery_release
@@ -37,7 +44,7 @@ module Carafe
   end
 
   def self.distillery_environment
-    fetch(:distillery_environment) { mix_env }
+    fetch(:distillery_environment) { DSL.mix_env }
   end
 
   module Buildhost
@@ -51,20 +58,8 @@ module Carafe
   end
 
   module Node
-    def self.app_path
-      Pathname(fetch(:app_path) { raise "set :app_path node path where the release is unpacked an run" })
-    end
-
     def self.app_name
       fetch(:application) { raise }
-    end
-
-    def self.hosts
-      hosts = roles(:app)
-      if hosts.none?
-        raise "No hosts have been configured with role 'app'"
-      end
-      hosts
     end
   end
 end
