@@ -37,14 +37,14 @@ module Carafe
 
       hosts
     end
-  end
 
-  def self.distillery_release
-    fetch(:application) { raise }
-  end
+    def distillery_environment
+      fetch(:distillery_environment) { mix_env }
+    end
 
-  def self.distillery_environment
-    fetch(:distillery_environment) { DSL.mix_env }
+    def distillery_release
+      fetch(:application) { raise }
+    end
   end
 
   module Buildhost

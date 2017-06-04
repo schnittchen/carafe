@@ -91,7 +91,7 @@ task "buildhost:mix:release" do
   on build_host do |host|
     within build_path do
       with mix_env: mix_env do
-        execute :mix, "release", "--env=#{Carafe.distillery_environment}"
+        execute :mix, "release", "--env=#{distillery_environment}"
       end
     end
   end
@@ -110,7 +110,7 @@ task "buildhost:gather-vsn" do
       with mix_env: mix_env do
         # Pull the version out of rel/config.exs
         arg =
-          %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{Carafe.distillery_release}].version}.shellescape
+          %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{distillery_release}].version}.shellescape
 
         vsn = capture(:mix, "run", "--no-start", "-e", arg).chomp
         raise ArgumentError if vsn.empty?
@@ -126,9 +126,9 @@ task "buildhost:archive_path" => "buildhost:gather-vsn" do
 
   archive_path =
     build_path.join(
-      "_build", Carafe.distillery_environment,
-      "rel", Carafe.distillery_release,
-      "releases", vsn, "#{Carafe.distillery_release}.tar.gz")
+      "_build", distillery_environment,
+      "rel", distillery_release,
+      "releases", vsn, "#{distillery_release}.tar.gz")
 
   set :buildhost_archive_path, archive_path
 end
