@@ -47,12 +47,6 @@ module Carafe
     end
   end
 
-  module Buildhost
-    def self.git
-      Capistrano::SCM::Git.new
-    end
-  end
-
   module Node
     def self.app_name
       fetch(:application) { raise }

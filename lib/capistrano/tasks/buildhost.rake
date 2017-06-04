@@ -1,18 +1,22 @@
 task "buildhost:git:check_reachable" do
+  git = Capistrano::SCM::Git.new
+
   on build_host do |host|
-    Carafe::Buildhost.git.check_repo_is_reachable
+    git.check_repo_is_reachable
   end
 end
 
 desc "Creates or updates the repo cache on the build host"
 task "buildhost:repo:update" => "buildhost:git:check_reachable" do
+  git = Capistrano::SCM::Git.new
+
   on build_host do |host|
-    unless Carafe::Buildhost.git.repo_mirror_exists?
-      Carafe::Buildhost.git.clone_repo
+    unless git.repo_mirror_exists?
+      git.clone_repo
     else
       # .clone_repo respects the repo_path, .update_mirror not.
       within repo_path do
-        Carafe::Buildhost.git.update_mirror
+        git.update_mirror
       end
     end
   end
