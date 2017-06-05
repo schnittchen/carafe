@@ -45,3 +45,11 @@ release :dummy1 do
   ]
 end
 
+release :custom_release do
+  set version: current_version(:dummy1)
+  set applications: [
+    :dummy1,
+    :runtime_tools
+  ]
+end
+
