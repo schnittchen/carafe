@@ -52,7 +52,7 @@ defmodule Enamel do
     failed(argv, reason, default_fun)
   end
   defp failed(argv, reason, fun) when is_function(fun, 1) do
-    failed(argv, reason, fn reason, command -> fun.(reason) end)
+    failed(argv, reason, fn reason, _command -> fun.(reason) end)
   end
   defp failed(argv, reason, fun) when is_function(fun, 2) do
     fun.(reason, argv |> Enum.join(" "))
@@ -73,7 +73,7 @@ defmodule Enamel do
     {_, config} = Map.pop(config, :dir)
     do_porcelain_args(argv, config, Keyword.put(porcelain_opts, :dir, dir))
   end
-  defp do_porcelain_args(argv, config, porcelain_opts) do
+  defp do_porcelain_args(argv, _config, porcelain_opts) do
     {hd(argv), tl(argv), porcelain_opts}
   end
 
@@ -85,7 +85,7 @@ defmodule Enamel do
       {:error, "Exit status #{status}"}
     end
   end
-  defp p_ok_error(%{err: error}) do
+  defp p_ok_error(%{err: error}, _) do
     {:error, "#{error}"} # not sure this can be converted to string
   end
 
