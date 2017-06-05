@@ -117,7 +117,10 @@ task "buildhost:gather-vsn" do
           %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{distillery_release}].version}.shellescape
 
         vsn = capture(:mix, "run", "--no-start", "-e", arg).chomp
-        raise ArgumentError if vsn.empty?
+
+        if vsn.empty?
+          raise "unable to determine version for release :#{distillery_release} from rel/config.exs"
+        end
 
         set :vsn, vsn
       end
