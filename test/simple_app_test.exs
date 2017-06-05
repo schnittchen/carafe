@@ -56,13 +56,12 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:mix:release})
     |> Enamel.run!
 
-    release_name = dummy.name # TODO: make this configurable
     release_version = dummy.version
 
     artifact_path = [
       dummy.build_path,
       "_build/#{dummy.distillery_env}",
-      "rel/#{release_name}/releases/#{release_version}/#{release_name}.tar.gz"
+      "rel/#{dummy.distillery_release}/releases/#{release_version}/#{dummy.distillery_release}.tar.gz"
     ] |> Path.join
 
     assert File.exists?(artifact_path)
@@ -94,10 +93,8 @@ defmodule SimpleAppTest do
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:archive:download node:archive:upload_and_unpack})
     |> Enamel.run!
 
-    release_name = dummy.name # TODO: make this configurable
-
     assert File.exists?(
-      [dummy.app_path, "bin/#{release_name}"] |> Path.join)
+      [dummy.app_path, "bin/#{dummy.distillery_release}"] |> Path.join)
   end
 
   test "basic interaction with nodes", %{dummy: dummy} do

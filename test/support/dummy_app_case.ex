@@ -15,7 +15,8 @@ defmodule DummyAppCase do
 
       :build_path, # like in the dummy's deploy config, but absolute
       :app_path, # like in the dummy's deploy config, but absolute
-      :distillery_env
+      :distillery_env,
+      :distillery_release
     ]
 
     def new(name) do
@@ -28,7 +29,8 @@ defmodule DummyAppCase do
         build_path: build_path,
         app_path: app_path,
 
-        distillery_env: "prod" # fixed
+        distillery_env: "prod", # fixed
+        distillery_release: name # default
       }
     end
 
