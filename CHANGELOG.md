@@ -13,6 +13,7 @@
 
 * partial overhaul of internal DSL
 * better error messages
+* improved documentation
 
 ## 0.1.1
 
