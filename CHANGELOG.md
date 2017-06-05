@@ -5,6 +5,10 @@
 * Documentation referred to wrong versions
 * Gem now depends on capistrano
 
+### Added
+
+* `:distillery_release` is now configurable in deployment config
+
 ### Changed
 
 * partial overhaul of internal DSL
