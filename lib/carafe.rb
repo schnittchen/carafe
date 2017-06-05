@@ -41,7 +41,12 @@ module Carafe
     end
 
     def distillery_release
-      fetch(:application) { raise "no :application configured" }
+      fetch(:distillery_release) {
+        # the same defaulting as distillery does
+        fetch(:application) {
+          raise "Unable to default distillery_release, :application not configured"
+        }
+      }
     end
   end
 end

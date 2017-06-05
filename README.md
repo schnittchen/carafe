@@ -119,6 +119,7 @@ Here are the config variables honored by carafe:
 |`:mix_env`| MIX_ENV environment when running `release` mix task from distillery|
 |`:application`| name of the OTP application|
 |`:distillery_environment`| name of the distillery environment, defaulting to the value of :mix_env|
+|`:distillery_release`| name of the distillery release, defaulting to the value of :application|
 |`:build_path`| path to build release on build host|
 |`:app_path`| path on application server where releases are unpacked and operated|
 

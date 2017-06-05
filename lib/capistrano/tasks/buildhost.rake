@@ -95,7 +95,7 @@ task "buildhost:mix:release" do
   on build_host do |host|
     within build_path do
       with mix_env: mix_env do
-        execute :mix, "release", "--env=#{distillery_environment}"
+        execute :mix, "release", "--env=#{distillery_environment}", "--name=#{distillery_release}"
       end
     end
   end
