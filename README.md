@@ -143,8 +143,7 @@ task "deploy" => [
 
 You should now be able to perform a production deploy with the command `bundle exec cap production deploy`.
 
-## Development & Contributing
+## Development & Contributing [(link)](contributing.html)
 
-Coming soon.
-
+**Don't run tests on your development machine**
 

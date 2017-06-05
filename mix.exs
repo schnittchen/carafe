@@ -12,7 +12,7 @@ defmodule Carafe.Mixfile do
 
      description: "Deployment for Elixir applications, using capistrano",
      package: package(),
-     docs: [main: "readme", extras: ["README.md"]]
+     docs: docs()
     ]
   end
 
@@ -21,6 +21,16 @@ defmodule Carafe.Mixfile do
      licenses: ["MIT"],
      links: %{"Github": "https://github.com/schnittchen/carafe"},
      files: ~w(mix.exs README.md LICENSE.md lib/**/*.ex)]
+  end
+
+  defp docs do
+     [
+       main: "readme",
+       extras: [
+         "README.md",
+         "docs/Contributing.md"
+       ]
+     ]
   end
 
   # Configuration for the OTP application
