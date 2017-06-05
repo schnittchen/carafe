@@ -143,6 +143,11 @@ task "deploy" => [
 
 You should now be able to perform a production deploy with the command `bundle exec cap production deploy`.
 
+## Custom tasks
+
+Custom tasks can be written to be executed before and after other tasks on the build
+host or the target nodes. See [here](customtasks.html) for details.
+
 ## Development & Contributing [(link)](contributing.html)
 
 **Don't run tests on your development machine**

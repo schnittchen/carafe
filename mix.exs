@@ -28,7 +28,8 @@ defmodule Carafe.Mixfile do
        main: "readme",
        extras: [
          "README.md",
-         "docs/Contributing.md"
+         "docs/Contributing.md",
+         "docs/CustomTasks.md"
        ]
      ]
   end
