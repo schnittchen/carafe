@@ -14,6 +14,7 @@ defmodule ReleaseNameTest do
     {:ok, %{dummy: %{ dummy | distillery_release: distillery_release }}}
   end
 
+  @tag :skip
   test "mix release creates a tarball at the expected path", %{dummy: dummy} do
     Enamel.new(dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production buildhost:prepare_build_path})
@@ -35,6 +36,7 @@ defmodule ReleaseNameTest do
     assert File.exists?(artifact_path)
   end
 
+  @tag :skip
   test "full deploy of a release", %{dummy: dummy} do
     Enamel.new(on_failure: &flunk_for_reason/2, dir: dummy.capistrano_wd)
     |> Enamel.command(~w{bundle exec cap --trace production node:ping}, expect_fail: true)
