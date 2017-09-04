@@ -40,10 +40,6 @@ defmodule Enamel do
       {:ok, true} -> failed(argv, "Expected failure, but succeeded", config)
       {{:error, reason}, false} -> failed(argv, reason, config)
     end
-
-    IO.puts "XXXXX pgrep"
-    Porcelain.exec("pgrep", ["-af", "erts"], [out: IO.binstream(:standard_io, :line)])
-    IO.puts "XXXXX end pgrep"
   end
 
   defp failed(argv, reason, %{on_failure: fun}) do
