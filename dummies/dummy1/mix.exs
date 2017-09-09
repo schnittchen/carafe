@@ -32,7 +32,7 @@ defmodule Dummy1.Mixfile do
       {:edeliver, "~> 1.4.2"},
       {:distillery, "~> 1.3.5"}, # even though carafe already depends on distillery,
         # edeliver complains it cannot detect it.
-      {:carafe, path: "__HEX_PACKAGE_PATH__"} # the path will be replaced in CI
+      {:carafe, path: "__HEX_PACKAGE_PATH__", app: false} # the path will be replaced in CI
     ]
   end
 end
