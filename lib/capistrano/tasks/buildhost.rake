@@ -112,11 +112,17 @@ task "buildhost:gather-vsn" do
   on build_host do |host|
     within build_path do
       with mix_env: mix_env do
+        # Stdout is notoriously polluted, hence we write to a temporary file instead.
+        tempfile = capture(:mktemp)
+
         # Pull the version out of rel/config.exs
         arg =
-          %Q{IO.puts Mix.Releases.Config.read!("rel/config.exs").releases[:#{distillery_release}].version}.shellescape
+          %Q{File.write(#{tempfile.inspect}, Mix.Releases.Config.read!("rel/config.exs").releases[:#{distillery_release}].version)}.shellescape
 
-        vsn = capture(:mix, "run", "--no-start", "-e", arg).chomp
+        execute :mix, "run", "--no-start", "-e", arg
+        vsn = capture(:cat, tempfile)
+
+        execute :rm, tempfile
 
         if vsn.empty?
           raise "unable to determine version for release :#{distillery_release} from rel/config.exs"

@@ -4,6 +4,7 @@
 
 * Documentation referred to wrong versions
 * Gem now depends on capistrano
+* Release version extraction was affected by noise on stdout
 
 ### Added
 
