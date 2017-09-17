@@ -19,7 +19,8 @@ machine:
         sudo apt-get install -y esl-erlang elixir
       fi
     - mkdir -p ~/.ssh; ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""; echo -e "\nHost localhost\nIdentityFile /home/ubuntu/.ssh/id_rsa\nStrictHostKeyChecking no\nUserKnownHostsFile /dev/null\n" >> ~/.ssh/config
-    - sudo useradd -m user
+    - sudo useradd -m user:
+        parallel: true #signal to circleci we _do_ use parallelism
     - sudo su -l user -c bash -c "mkdir .ssh && touch .ssh/authorized_keys"
     - sudo sh -c "cat ~/.ssh/id_rsa.pub >> /home/user/.ssh/authorized_keys"
 dependencies:
