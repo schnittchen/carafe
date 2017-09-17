@@ -69,6 +69,7 @@ defmodule DummyAppCase do
       File.mkdir_p! gem_path
 
       Enamel.new
+      |> Enamel.command(~w{bundle install})
       |> Enamel.command(~w{rake build})
       |> Enamel.command(~w{tar xf #{from}/pkg/carafe-#{gem_and_hex_version}.gem data.tar.gz}, dir: gem_path)
       |> Enamel.command(~w{tar xf data.tar.gz}, dir: gem_path)

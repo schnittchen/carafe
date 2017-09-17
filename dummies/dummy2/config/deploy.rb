@@ -1,5 +1,6 @@
 # config valid only for current version of Capistrano
-lock "~> 3.8.0"
+## disabled so a regular CI build should catch incompatibilities
+# lock "~> 3.8.0"
 
 set :application, "dummy2"
 set :repo_url, "__REMOTE__"

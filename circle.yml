@@ -1,0 +1,37 @@
+machine:
+  ruby:
+    version: 2.4.0
+  pre:
+    - |
+      case $CIRCLE_NODE_INDEX in
+        0) echo 1.4.4-1 > .ELIXIR_VERSION
+        ;;
+        1) rm -f .ELIXIR_VERSION
+        ;;
+      esac
+    - sudo rm -f /etc/rc2.d/K80couchdb && sudo apt-get remove couchdb || true # otherwise, erlang installation fails
+    - sudo wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+    - sudo sh -c "dpkg -i erlang-solutions_1.0_all.deb && apt-get -qq update"
+    - |
+      if [ -e .ELIXIR_VERSION ]; then
+        sudo apt-get install -y esl-erlang elixir=`cat .ELIXIR_VERSION`
+      else
+        sudo apt-get install -y esl-erlang elixir
+      fi
+    - mkdir -p ~/.ssh; ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""; echo -e "\nHost localhost\nIdentityFile /home/ubuntu/.ssh/id_rsa\nStrictHostKeyChecking no\nUserKnownHostsFile /dev/null\n" >> ~/.ssh/config
+    - sudo useradd -m user:
+        parallel: true #signal to circleci we _do_ use parallelism
+    - sudo su -l user -c bash -c "mkdir .ssh && touch .ssh/authorized_keys"
+    - sudo sh -c "cat ~/.ssh/id_rsa.pub >> /home/user/.ssh/authorized_keys"
+dependencies:
+  override:
+    # HERE the ruby version has been set up and won't change again
+    - id; pwd; which ruby
+    - echo export "PATH=$PATH" | sudo sh -c "cat >> /etc/environment"
+    - ssh localhost -l user sh -c "env; which ruby; which elixir; elixir --version"
+    - mix local.hex --force
+test:
+  override:
+    - mix deps.get
+    - mix test
+

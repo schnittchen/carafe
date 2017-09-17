@@ -14,6 +14,7 @@
 * partial overhaul of internal DSL
 * better error messages
 * improved documentation
+* switched to CircleCI, build against multiple elixir versions
 
 ## 0.1.1
 

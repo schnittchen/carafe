@@ -1,7 +1,7 @@
 # Carafe
 
 [![Hex.pm](http://img.shields.io/hexpm/v/carafe.svg)](https://hex.pm/packages/carafe)
-[![Build status](https://api.travis-ci.org/schnittchen/carafe.svg)](https://travis-ci.org/schnittchen/carafe)
+[![Build status](https://circleci.com/gh/schnittchen/carafe/tree/master.svg?style=shield&circle-token=196cd3a80a40aabb92eb48e005fd12230ccf5dbb)](https://circleci.com/gh/schnittchen/carafe)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/schnittchen/carafe/master/LICENSE.md)
 
 This is a tool for deploying Elixir applications, built upon [capistrano](http://capistranorb.com/).
@@ -62,7 +62,7 @@ Add these deps to your `mix.exs`:
     [
       {:edeliver, "~> 1.4.2"},
       {:distillery, "~> 1.3.5"},
-      {:carafe, "~> 0.1.1"}
+      {:carafe, "~> 0.1.1", app: false}
     ]
   end
 ```
