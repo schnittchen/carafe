@@ -93,6 +93,12 @@ module Carafe
         }
       }
     end
+
+    # Execute the given elixir code on the node, through the rpc interface.
+    # Fails if the code raises an exception or returns `:error` or `{:error, _}`.
+    def execute_elixir(elixir_string)
+      execute "bin/#{distillery_release}", "rpc", "Elixir.Carafe", "execute_elixir", elixir_string.shellescape
+    end
   end
 end
 
