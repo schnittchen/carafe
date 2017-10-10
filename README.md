@@ -62,7 +62,7 @@ Add these deps to your `mix.exs`:
     [
       {:edeliver, "~> 1.4.2"},
       {:distillery, "~> 1.3.5"},
-      {:carafe, "~> 0.1.1", app: false}
+      {:carafe, "~> 0.1.1"}
     ]
   end
 ```

@@ -43,7 +43,7 @@ defmodule Top.Mixfile do
       # because it is already in the top level mix.exs.
       # It can become entirely obsolete when we get rid of edeliver.
       {:distillery, "~> 1.3.5"},
-      {:carafe, path: "__HEX_PACKAGE_PATH__", app: false}, # the path will be replaced in CI
+      {:carafe, path: "__HEX_PACKAGE_PATH__"}, # the path will be replaced in CI
       {:other, in_umbrella: true}
     ]
   end
