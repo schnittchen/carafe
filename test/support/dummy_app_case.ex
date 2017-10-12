@@ -59,10 +59,14 @@ defmodule DummyAppCase do
 
       gem_and_hex_version = Mix.Project.config |> Keyword.fetch!(:version)
 
+      # NOTE the hex archive has everything timestamped at the beginning of the epoch. This triggers
+      # that carafe has no app file when compiled, which I could not reproduce outside of CI.
+      # The workaround is using the -m option when extracting.
+
       Enamel.new
       |> Enamel.command(~w{mix hex.build})
       |> Enamel.command(~w{tar xf #{from}/carafe-#{gem_and_hex_version}.tar contents.tar.gz}, dir: hex_package_path)
-      |> Enamel.command(~w{tar xf contents.tar.gz}, dir: hex_package_path)
+      |> Enamel.command(~w{tar xf contents.tar.gz -m}, dir: hex_package_path)
       |> Enamel.run!
 
       gem_path = [root_path, "gem"] |> Path.join
