@@ -4,6 +4,7 @@
 
 set :application, "top"
 set :repo_url, "__REMOTE__"
+set :distillery_release, :dummy2
 
 set :repo_path, "dummy1_repo"
 set :build_path, "build_path"
