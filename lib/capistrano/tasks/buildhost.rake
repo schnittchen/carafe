@@ -140,7 +140,7 @@ task "buildhost:archive_path" => "buildhost:gather-vsn" do
   archive_path =
     build_path.join(
       "_build", distillery_environment,
-      "rel", distillery_release,
+      "rel", distillery_release.to_s,
       "releases", vsn, "#{distillery_release}.tar.gz")
 
   set :buildhost_archive_path, archive_path
