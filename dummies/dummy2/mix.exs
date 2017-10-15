@@ -21,8 +21,6 @@ defmodule Dummy2.Mixfile do
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps folder
   defp deps do
-    [
-      {:distillery, "~> 1.3.5"} # needed by edeliver to detect that we use distillery
-    ]
+    []
   end
 end
