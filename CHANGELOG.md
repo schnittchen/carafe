@@ -20,6 +20,9 @@ edeliver functionality soo.
 * better error messages
 * improved documentation
 * switched to CircleCI, build against multiple elixir versions
+* monitoring application boot up no longer relies on edeliver.
+* (breaking change) For umbrella applications, the `:application`
+  variable must be the top app to be deployed
 
 ## 0.1.1
 

@@ -127,6 +127,9 @@ Here are the config variables honored by carafe:
 
 A demonstration for an umbrella project is in the `dummies/dummy2` test dummy project.
 
+The `:application` variable must be the name of the top-level OTP application that is being deployed,
+and other OTP apps to be deployed with it must be deps (possibly transitive).
+
 ## Usage
 
 Currently, only deploying releases is supported. Every deploy scenario is a bit different, so

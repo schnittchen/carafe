@@ -79,7 +79,6 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
   script = distillery_release
   app = fetch(:application) { raise ":application has not been set" }
 
-  # see https://github.com/boldpoker/edeliver/blob/0582a32546edca8e6b047c956e3dd4ef74b09ac1/libexec/erlang#L856
   on app_hosts do |host|
     within app_path do
       # Don't know why the additional `cd` is needed here.
@@ -87,9 +86,13 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
         cd #{app_path}; for i in {1..10}; do bin/#{script} ping && break || true; sleep 1; done
       EOS
 
-      execute "bin/#{script}", <<-EOS
-      rpcterms Elixir.Edeliver run_command '[monitor_startup_progress, \"#{app}\", verbose].' | grep -e 'Started\\|^ok'
-      EOS
+      elixir = %{
+        fn -> Application.started_applications |> Enum.any?(fn info -> elem(info, 0) == :#{app} end) end
+        |> Stream.repeatedly
+        |> Stream.each(fn running -> unless running, do: :timer.sleep(250) end)
+        |> Enum.any?
+      }
+      execute "bin/#{script}", "rpc", "Elixir.Carafe", "execute_elixir", elixir.shellescape
     end
   end
 end
