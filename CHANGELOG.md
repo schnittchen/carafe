@@ -1,5 +1,8 @@
 ## 0.1.2 (upcoming)
 
+Major changes: With `execute_elixir`, we will be able to replace
+edeliver functionality soo.
+
 ### Fixed
 
 * Documentation referred to wrong versions
@@ -9,6 +12,7 @@
 ### Added
 
 * `:distillery_release` is now configurable in deployment config
+* `execute_elixir` utility
 
 ### Changed
 
