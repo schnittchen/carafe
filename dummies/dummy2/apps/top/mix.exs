@@ -38,7 +38,6 @@ defmodule Top.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:edeliver, "~> 1.4.2"},
       # we actually do not need to declare the distillery dep here
       # because it is already in the top level mix.exs.
       # It can become entirely obsolete when we get rid of edeliver.
