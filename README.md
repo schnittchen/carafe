@@ -7,8 +7,7 @@
 This is a tool for deploying Elixir applications, built upon [capistrano](http://capistranorb.com/).
 
 Carafe requires git for hosting the source repository. It depends on
-[Edeliver](https://github.com/boldpoker/edeliver) for a few parts that are not handled in
-Carafe yet. Release building requires [Distillery](https://github.com/bitwalker/distillery).
+[Distillery](https://github.com/bitwalker/distillery) for handling releases.
 
 ![Screenshot](https://github.com/schnittchen/carafe/blob/master/deploy.gif)
 
@@ -60,20 +59,12 @@ Add these deps to your `mix.exs`:
 ```
   defp deps do
     [
-      {:edeliver, "~> 1.4.2"},
-      {:distillery, "~> 1.3.5"},
       {:carafe, "~> 0.1.1"}
     ]
   end
 ```
 
-and run `mix deps.get`. Add `:edeliver` to your `:extra_applications` AS LAST:
-
-```
-  def application do
-    [extra_applications: [:logger, :edeliver]]
-  end
-```
+and run `mix deps.get`.
 
 ## Configuration
 

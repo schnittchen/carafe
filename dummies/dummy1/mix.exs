@@ -15,7 +15,7 @@ defmodule Dummy1.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger, :edeliver]]
+    [extra_applications: [:logger]]
   end
 
   # Dependencies can be Hex packages:
@@ -29,9 +29,6 @@ defmodule Dummy1.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:edeliver, "~> 1.4.2"},
-      {:distillery, "~> 1.3.5"}, # even though carafe already depends on distillery,
-        # edeliver complains it cannot detect it.
       {:carafe, path: "__HEX_PACKAGE_PATH__"} # the path will be replaced in CI
     ]
   end

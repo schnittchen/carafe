@@ -38,11 +38,6 @@ defmodule Top.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:edeliver, "~> 1.4.2"},
-      # we actually do not need to declare the distillery dep here
-      # because it is already in the top level mix.exs.
-      # It can become entirely obsolete when we get rid of edeliver.
-      {:distillery, "~> 1.3.5"},
       {:carafe, path: "__HEX_PACKAGE_PATH__"}, # the path will be replaced in CI
       {:other, in_umbrella: true}
     ]

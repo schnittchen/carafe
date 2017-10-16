@@ -1,7 +1,6 @@
 ## 0.1.2 (upcoming)
 
-Major changes: With `execute_elixir`, we will be able to replace
-edeliver functionality soo.
+Major changes: carafe no longer relies on edeliver for node services.
 
 ### Fixed
 
@@ -13,6 +12,7 @@ edeliver functionality soo.
 
 * `:distillery_release` is now configurable in deployment config
 * `execute_elixir` utility
+* task snippets in documentation
 
 ### Changed
 
