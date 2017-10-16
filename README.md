@@ -149,7 +149,8 @@ You should now be able to perform a production deploy with the command `bundle e
 ## Custom tasks
 
 Custom tasks can be written to be executed before and after other tasks on the build
-host or the target nodes. See [here](customtasks.html) for details.
+host or the target nodes. See [here](customtasks.html) for details. There you can also find example
+snippets for Phoenix and Ecto.
 
 ## Development & Contributing [(link)](contributing.html)
 

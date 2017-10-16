@@ -46,7 +46,11 @@ staging nodes.
 
 The `desc` line adds documentation to your task that will appear when you run `bundle exec cap -T`.
 
-NOTE you cannot use mix tasks here because they are not part of the code available on a node.
+## Running mix tasks and other code on a node
+
+On the build host, mix tasks can be run as usual. You can find an example snippet below.
+On a node, mix tasks are usually not available. Instead, you can execute arbitrary
+elixir code by using the `execute_elixir` method in your node task. An example can be found below.
 
 ## Available API
 
@@ -66,4 +70,41 @@ Otherwise, put them into a file matching the pattern `lib/capistrano/tasks/*.rak
 
 Use `before` or `after` hooks only from `config/deploy.rb`, not from a `.rake` file,
 and avoid placing hooks in a stage config file.
+
+## Ecto and Phoenix task snippets
+
+### Building assets into the release (with brunch)
+
+```
+task "build:assets" do
+  on roles(:build) do |host|
+    within build_path.join("assets") do
+      execute :npm, "install"
+      execute "node_modules/.bin/brunch", "build --production"
+    end
+
+    within build_path do
+      with mix_env: mix_env do
+        execute :mix, "phx.digest"
+      end
+    end
+  end
+end
+```
+
+### Migrating up
+
+```
+task "node:migrate:up" do
+  on roles(:db) do |host|
+    within app_path do
+      elixir = %{
+        path = Application.app_dir(:my_app, "priv/repo/migrations")
+        Ecto.Migrator.run(MyApp.Repo, path, :up, all: true)
+      }
+      execute_elixir elixir
+    end
+  end
+end
+```
 
