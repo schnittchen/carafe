@@ -92,7 +92,7 @@ task "node:full_restart" => ["node:stop-if-running", "node:start"] do
         |> Stream.each(fn running -> unless running, do: :timer.sleep(250) end)
         |> Enum.any?
       }
-      execute "bin/#{script}", "rpc", "Elixir.Carafe", "execute_elixir", elixir.shellescape
+      execute_elixir elixir
     end
   end
 end
