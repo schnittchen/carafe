@@ -20,7 +20,8 @@ At some point in time, on the build host within the build path,
 we create the `priv` directory and copy `/etc/hostname` into it.
 
 If we make this happen before distillery's `release` mix task runs, the file
-will be part of the application in the release (that's what `priv` is for). So let's do just that:
+will be part of the application in the release (that's what `priv` is for). So let's do just that,
+using a hook:
 
 ```
 before "buildhost:mix:release", :add_to_priv
@@ -65,11 +66,8 @@ where you can find all available methods documented.
 
 ## Where to put custom tasks and where to trigger them
 
-When you have only 1-2 short custom tasks, you can keep them in `config/deploy.rb`.
+If your tasks are only a few, short snippets, you can keep them in `config/deploy.rb`.
 Otherwise, put them into a file matching the pattern `lib/capistrano/tasks/*.rake`, and they will automatically be available.
-
-Use `before` or `after` hooks only from `config/deploy.rb`, not from a `.rake` file,
-and avoid placing hooks in a stage config file.
 
 ## Ecto and Phoenix task snippets
 
@@ -108,3 +106,5 @@ task "node:migrate:up" do
 end
 ```
 
+Note that the ruby variable `elixir` here contains a string of Elixir code that
+is run on the node.
