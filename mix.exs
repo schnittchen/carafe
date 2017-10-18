@@ -44,7 +44,7 @@ defmodule Carafe.Mixfile do
 
   defp deps do
     [
-      {:distillery, "~> 1.3.5"},
+      {:distillery, "~> 1.3.5", runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:porcelain, "~> 2.0", only: [:dev, :test]}
     ]
