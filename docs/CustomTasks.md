@@ -60,9 +60,8 @@ up/downloading files please see the
 [SSHKit documentation](https://github.com/capistrano/sshkit/blob/master/README.md). Capistrano
 includes the DSL from SSHKit to make all of this available for us.
 
-For the Carafe-specific parts of the DSL, head over to
-[the implementation of the `Carafe::DSL` module](https://github.com/schnittchen/carafe/blob/master/lib/carafe.rb)
-where you can find all available methods documented.
+Carafe defines a handfull of methods to be used by tasks. See
+[the documentation of the DSL module](http://www.rubydoc.info/gems/carafe/Carafe/DSL).
 
 ## Where to put custom tasks and where to trigger them
 
