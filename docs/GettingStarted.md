@@ -1,5 +1,7 @@
 # Getting started
 
+Carafe is both a hex package and a ruby gem. First you need to install both.
+
 ## Elixir side
 
 Add carafe as a dep to your `mix.exs`:
