@@ -39,7 +39,7 @@ module Carafe
       Pathname(fetch(:build_path) { raise "no :build_path configured" })
     end
 
-    # Returns the mix environment to be used when preparing and creating the release.
+    # (String) Returns the mix environment to be used when preparing and creating the release.
     # Can be used with capistrano's `with` method like this (Note: `with` uppercases the name):
     # ```
     # task :my_task do
@@ -77,7 +77,7 @@ module Carafe
       hosts
     end
 
-    # Returns the distillery environment to use, defaulting to the result of `mix_env`.
+    # (String) Returns the distillery environment to use, defaulting to the result of `mix_env`.
     # The distillery environment is configured in `rel/config.exs`.
     def distillery_environment
       fetch(:distillery_environment).to_s
