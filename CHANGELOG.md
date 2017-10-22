@@ -1,4 +1,4 @@
-## 0.1.2 (upcoming)
+## 0.2.0
 
 Major changes: carafe no longer relies on edeliver for node services.
 

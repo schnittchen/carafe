@@ -9,7 +9,7 @@ Add carafe as a dep to your `mix.exs`:
 ```
   defp deps do
     [
-      {:carafe, "~> 0.1.1"}
+      {:carafe, "~> 0.2.0"}
     ]
   end
 ```
