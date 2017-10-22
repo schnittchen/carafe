@@ -8,14 +8,13 @@ load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Carafe
   module DSL
-    # Returns the build host, to be consumed by capistrano's `on` method like this:
-    # ```
-    # task :my_task do
-    #   on build_host do
-    #     ...
+    # Returns the build host, to be consumed by capistrano's +on+ method like this:
+    #
+    #   task :my_task do
+    #     on build_host do
+    #       ...
+    #     end
     #   end
-    # end
-    # ```
     def build_host
       hosts = roles(:build)
 
@@ -25,50 +24,54 @@ module Carafe
       hosts.first
     end
 
-    # Returns the build path on the build host, can be used with capistrano's `within` method like this:
-    # ```
-    # task :my_task do
-    #   on build_host do |host|
-    #     within build_path do
-    #       ...
-    #     end
-    #   end
-    # end
-    # ```
-    def build_path
-      Pathname(fetch(:build_path) { raise "no :build_path configured" })
-    end
-
-    # (String) Returns the mix environment to be used when preparing and creating the release.
-    # Can be used with capistrano's `with` method like this (Note: `with` uppercases the name):
-    # ```
-    # task :my_task do
-    #   on build_host do |host|
-    #     within build_path do
-    #       with mix_env: mix_env do
+    # Returns the build path on the build host, can be used with capistrano's +within+ method like this:
+    #
+    #   task :my_task do
+    #     on build_host do |host|
+    #       within build_path do
     #         ...
     #       end
     #     end
     #   end
-    # end
-    # ```
+    #
+    # @return [Pathname]
+    def build_path
+      Pathname(fetch(:build_path) { raise "no :build_path configured" })
+    end
+
+    # Returns the mix environment to be used when preparing and creating the release.
+    # Can be used with capistrano's +with+ method like this (Note: +with+ uppercases the name):
+    #
+    #   task :my_task do
+    #     on build_host do |host|
+    #       within build_path do
+    #         with mix_env: mix_env do
+    #           ...
+    #         end
+    #       end
+    #     end
+    #   end
+    #
+    # @return [String]
     def mix_env
       fetch(:mix_env).to_s
     end
 
     # Returns the path on the target hosts where releases are extracted and loaded from.
+    #
+    # @return [Pathname]
     def app_path
       Pathname(fetch(:app_path) { raise "set :app_path node path where the release is unpacked an run" })
     end
 
-    # Returns the target hosts, to be consumed by capistrano's `on` method like this:
-    # ```
-    # task :my_task do
-    #   on app_hosts do
-    #     ...
+    # Returns the target hosts, to be consumed by capistrano's +on+ method like this:
+    #
+    #   task :my_task do
+    #     on app_hosts do
+    #       ...
+    #     end
     #   end
-    # end
-    # ```
+    #
     def app_hosts
       hosts = roles(:app)
 
@@ -77,14 +80,16 @@ module Carafe
       hosts
     end
 
-    # (String) Returns the distillery environment to use, defaulting to the result of `mix_env`.
-    # The distillery environment is configured in `rel/config.exs`.
+    # Returns the distillery environment to use, defaulting to the result of +mix_env+.
+    # The distillery environment is configured in +rel/config.exs+.
+    #
+    # @return [String]
     def distillery_environment
       fetch(:distillery_environment).to_s
     end
 
-    # Execute the given elixir code on the node, through the rpc interface.
-    # Fails if the code raises an exception or returns `:error` or `{:error, _}`.
+    # Executes the given elixir code on the node, through the rpc interface.
+    # Fails if the code raises an exception or returns +:error+ or <tt>{:error, _}</tt>.
     def execute_elixir(elixir_string)
       script = fetch(:distillery_release)
       execute "bin/#{script}", "rpc", "Elixir.Carafe", "execute_elixir", elixir_string.shellescape
