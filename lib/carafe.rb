@@ -7,6 +7,7 @@ load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/node.rake", __FILE__)
 
 module Carafe
+  # The methods in this module are made available to all Capistrano tasks.
   module DSL
     # Returns the build host, to be consumed by capistrano's +on+ method like this:
     #
@@ -40,7 +41,7 @@ module Carafe
     end
 
     # Returns the mix environment to be used when preparing and creating the release.
-    # Can be used with capistrano's +with+ method like this (Note: +with+ uppercases the name):
+    # Can be used with capistrano's +with+ method like this:
     #
     #   task :my_task do
     #     on build_host do |host|
@@ -51,6 +52,9 @@ module Carafe
     #       end
     #     end
     #   end
+    #
+    # Note that +with+ upcases the key, such that the name of the OS environment variable
+    # will be +MIX_ENV+.
     #
     # @return [String]
     def mix_env
@@ -64,7 +68,7 @@ module Carafe
       Pathname(fetch(:app_path) { raise "set :app_path node path where the release is unpacked an run" })
     end
 
-    # Returns the target hosts, to be consumed by capistrano's +on+ method like this:
+    # Returns an array of application nodes, to be consumed by capistrano's +on+ method like this:
     #
     #   task :my_task do
     #     on app_hosts do
