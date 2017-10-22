@@ -25,11 +25,12 @@ defmodule Carafe.Mixfile do
 
   defp docs do
      [
-       main: "readme",
+       main: "gettingstarted",
        extras: [
-         "README.md",
+         "docs/GettingStarted.md",
+         "docs/ConfigurationUsage.md",
+         "docs/CustomTasks.md",
          "docs/Contributing.md",
-         "docs/CustomTasks.md"
        ]
      ]
   end
