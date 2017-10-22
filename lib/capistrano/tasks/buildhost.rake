@@ -95,7 +95,7 @@ task "buildhost:mix:release" do
   on build_host do |host|
     within build_path do
       with mix_env: mix_env do
-        execute :mix, "release", "--env=#{distillery_environment}", "--name=#{distillery_release}"
+        execute :mix, "release", "--env=#{distillery_environment}", "--name=#{fetch(:distillery_release)}"
       end
     end
   end
@@ -117,7 +117,7 @@ task "buildhost:gather-vsn" do
 
         # Pull the version out of rel/config.exs
         arg =
-          %Q{File.write(#{tempfile.inspect}, Mix.Releases.Config.read!("rel/config.exs").releases[:#{distillery_release}].version)}.shellescape
+          %Q{File.write(#{tempfile.inspect}, Mix.Releases.Config.read!("rel/config.exs").releases[:#{fetch(:distillery_release)}].version)}.shellescape
 
         execute :mix, "run", "--no-start", "-e", arg
         vsn = capture(:cat, tempfile)
@@ -125,7 +125,7 @@ task "buildhost:gather-vsn" do
         execute :rm, tempfile
 
         if vsn.empty?
-          raise "unable to determine version for release :#{distillery_release} from rel/config.exs"
+          raise "unable to determine version for release :#{fetch(:distillery_release)} from rel/config.exs"
         end
 
         set :vsn, vsn
@@ -140,8 +140,8 @@ task "buildhost:archive_path" => "buildhost:gather-vsn" do
   archive_path =
     build_path.join(
       "_build", distillery_environment,
-      "rel", distillery_release.to_s,
-      "releases", vsn, "#{distillery_release}.tar.gz")
+      "rel", fetch(:distillery_release).to_s,
+      "releases", vsn, "#{fetch(:distillery_release)}.tar.gz")
 
   set :buildhost_archive_path, archive_path
 end

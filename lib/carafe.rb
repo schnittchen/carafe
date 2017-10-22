@@ -1,5 +1,6 @@
 require "carafe/version"
 
+load File.expand_path("../capistrano/tasks/defaults.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/deploy.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/local.rake", __FILE__)
 load File.expand_path("../capistrano/tasks/buildhost.rake", __FILE__)
@@ -38,7 +39,7 @@ module Carafe
       Pathname(fetch(:build_path) { raise "no :build_path configured" })
     end
 
-    # Returns the mix environment to be used when preparing and creating the release.
+    # (String) Returns the mix environment to be used when preparing and creating the release.
     # Can be used with capistrano's `with` method like this (Note: `with` uppercases the name):
     # ```
     # task :my_task do
@@ -52,7 +53,7 @@ module Carafe
     # end
     # ```
     def mix_env
-      fetch(:mix_env) { raise "set :mix_env in stage config!" }.to_s
+      fetch(:mix_env).to_s
     end
 
     # Returns the path on the target hosts where releases are extracted and loaded from.
@@ -76,28 +77,17 @@ module Carafe
       hosts
     end
 
-    # Returns the distillery environment to use, defaulting to the result of `mix_env`.
+    # (String) Returns the distillery environment to use, defaulting to the result of `mix_env`.
     # The distillery environment is configured in `rel/config.exs`.
     def distillery_environment
-      fetch(:distillery_environment) { mix_env }
-    end
-
-    # Returns the distillery release to use, defaulting to the result of
-    # the capistrano variable named `:application`.
-    # The distillery release is configured in `rel/config.exs`.
-    def distillery_release
-      fetch(:distillery_release) {
-        # the same defaulting as distillery does
-        fetch(:application) {
-          raise "Unable to default distillery_release, :application not configured"
-        }
-      }
+      fetch(:distillery_environment).to_s
     end
 
     # Execute the given elixir code on the node, through the rpc interface.
     # Fails if the code raises an exception or returns `:error` or `{:error, _}`.
     def execute_elixir(elixir_string)
-      execute "bin/#{distillery_release}", "rpc", "Elixir.Carafe", "execute_elixir", elixir_string.shellescape
+      script = fetch(:distillery_release)
+      execute "bin/#{script}", "rpc", "Elixir.Carafe", "execute_elixir", elixir_string.shellescape
     end
   end
 end
