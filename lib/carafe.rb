@@ -83,17 +83,11 @@ module Carafe
       fetch(:distillery_environment).to_s
     end
 
-    # Returns the distillery release to use, defaulting to the result of
-    # the capistrano variable named `:application`.
-    # The distillery release is configured in `rel/config.exs`.
-    def distillery_release
-      fetch(:distillery_release)
-    end
-
     # Execute the given elixir code on the node, through the rpc interface.
     # Fails if the code raises an exception or returns `:error` or `{:error, _}`.
     def execute_elixir(elixir_string)
-      execute "bin/#{distillery_release}", "rpc", "Elixir.Carafe", "execute_elixir", elixir_string.shellescape
+      script = fetch(:distillery_release)
+      execute "bin/#{script}", "rpc", "Elixir.Carafe", "execute_elixir", elixir_string.shellescape
     end
   end
 end
