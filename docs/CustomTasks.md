@@ -87,6 +87,8 @@ task "build:assets" do
     end
   end
 end
+
+after "buildhost:compile", "build:assets"
 ```
 
 ### Migrating up
