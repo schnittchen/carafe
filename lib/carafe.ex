@@ -17,7 +17,7 @@ defmodule Carafe do
       :ok -> :ok
       {:ok, _} -> :ok
       :error = bad -> bad
-      {error, } = bad -> bad
+      {_error, } = bad -> bad
       other ->
         if other, do: :ok, else: other
     end
